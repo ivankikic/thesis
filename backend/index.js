@@ -19,13 +19,8 @@ app.use(cors(corsOptions));
 app.use(json());
 app.use(cookieParser());
 
-// Serve static files
-app.use("/", express.static(join(__dirname, "public")));
-
-// Users routes
+// routes
 app.use("/api/users", usersRouter);
-
-// Auth routes
 app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
