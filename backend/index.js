@@ -2,8 +2,6 @@ import express, { json } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 
 import usersRouter from "./routes/users-routes.js";
 import authRouter from "./routes/auth-routes.js";
