@@ -53,6 +53,30 @@ router.get("/refresh_token", async (req, res) => {
   }
 });
 
+router.post("/register", async (req, res) => {
+  try {
+    const { email, password, username } = req.body;
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (user.rows.length > 0) {
+      return res.status(401).json("User already exists");
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await pool.query(
+      "INSERT INTO users (email, password, username) VALUES ($1, $2, $3) RETURNING *",
+      [email, hashedPassword, username]
+    );
+    const tokens = jwtTokens(newUser.rows[0]);
+    res.cookie("refreshToken", tokens.refreshToken, {
+      httpOnly: true,
+    });
+    res.json({ email, username, tokens });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.delete("/logout", (req, res) => {
   try {
     res.clearCookie("refreshToken");
