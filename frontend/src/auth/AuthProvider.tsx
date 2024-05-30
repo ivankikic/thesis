@@ -35,11 +35,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const userData = await AuthService.loginUser(email, password);
-    setIsLoggedIn(true);
-    setUser(userData);
+    try {
+      const userData = await AuthService.loginUser(email, password);
+      setIsLoggedIn(true);
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      throw error;
+    }
   };
-
   const logout = () => {
     AuthService.logoutUser();
     setIsLoggedIn(false);

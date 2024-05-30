@@ -13,7 +13,7 @@ const ProtectedRoute = () => {
   const { isLoggedIn, user } = useAuthContext();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  if (!user) {
+  if (!user && isLoggedIn) {
     return <div>Loading...</div>;
   }
 

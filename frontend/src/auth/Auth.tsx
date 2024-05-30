@@ -139,7 +139,12 @@ export default class AuthService {
       this.saveCurrentUser(userData.username, userData.email, userData.role);
       return userData;
     } catch (error) {
-      throw error;
+      console.log(error);
+      throw (
+        (error as any).data ||
+        (error as any).message ||
+        "Unknown error occurred"
+      );
     }
   }
 

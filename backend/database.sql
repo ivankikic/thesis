@@ -4,14 +4,15 @@ CREATE DATABASE farmsense;
 
 CREATE TABLE users (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
 SELECT * FROM users;
 
-INSERT INTO users (username, email, password) VALUES ('admin', 'ivankikic49@gmail.com', 'admin');
+INSERT INTO users (name, surname, email, password) VALUES ('Ivan', 'Kikic', 'ivankikic49@gmail.com', 'admin');
 
 
 --psql -U postgres

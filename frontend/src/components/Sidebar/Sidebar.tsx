@@ -18,6 +18,7 @@ import SettingsIcon from "/icons/settings.svg";
 import SheetIcon from "/icons/sheet.svg";
 import DashboardIcon from "/icons/dashboard.svg";
 import RightArrowIcon from "/icons/arrow.svg";
+import { useAuthContext } from "../../auth/AuthProvider";
 
 // Temp data
 const sheets = ["Sheet 1", "Sheet 2", "Sheet 3"];
@@ -32,6 +33,7 @@ const Sidebar = ({
 }) => {
   const [sheetsOpen, setSheetsOpen] = useState(false);
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
+  const { user } = useAuthContext();
 
   return (
     <>

@@ -28,12 +28,14 @@ router.post("/login", async (req, res) => {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
     });
-    const username = user.rows[0].username;
+    const name = user.rows[0].name;
+    const surname = user.rows[0].surname;
     const id = user.rows[0].id;
     const userData = {
       id,
       email,
-      username,
+      name,
+      surname,
     };
     res.json({ userData, tokens });
   } catch (error) {
@@ -62,7 +64,7 @@ router.get("/refresh_token", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, name, surname } = req.body;
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
@@ -71,14 +73,14 @@ router.post("/register", async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await pool.query(
-      "INSERT INTO users (email, password, username) VALUES ($1, $2, $3) RETURNING *",
-      [email, hashedPassword, username]
+      "INSERT INTO users (email, password, name, surname) VALUES ($1, $2, $3, $4) RETURNING *",
+      [email, hashedPassword, name, surname]
     );
     const tokens = jwtTokens(newUser.rows[0]);
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
     });
-    res.json({ email, username, tokens });
+    res.json({ email, name, surname, tokens });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

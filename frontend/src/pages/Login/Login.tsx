@@ -28,13 +28,9 @@ const Login = () => {
       try {
         await login(values.email, values.password);
         navigate("/");
-        toast.success("Uspješno ste se prijavili!", { duration: 150 });
+        toast.success("Uspješno ste se prijavili!", { duration: 1500 });
       } catch (error) {
-        if (error instanceof Error && "data" in error) {
-          toast.error((error as any).data);
-        } else {
-          toast.error("An unknown error occurred");
-        }
+        toast.error(error as string, { duration: 1500 });
       }
     },
   });
