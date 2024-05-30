@@ -29,7 +29,13 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
     });
     const username = user.rows[0].username;
-    res.json({ email, username, tokens });
+    const id = user.rows[0].id;
+    const userData = {
+      id,
+      email,
+      username,
+    };
+    res.json({ userData, tokens });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

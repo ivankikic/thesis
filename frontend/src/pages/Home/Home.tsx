@@ -1,7 +1,8 @@
-import React from "react";
+import { useAuthContext } from "../../auth/AuthProvider";
 
 const Home = () => {
-  return <div>Home</div>;
+  const { user } = useAuthContext();
+  return <div>Home: {user.email}</div>;
 };
 
 export default Home;

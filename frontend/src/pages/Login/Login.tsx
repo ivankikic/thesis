@@ -3,14 +3,15 @@ import * as Yup from "yup";
 import { Form, FormControl } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../auth/Auth";
 import toast from "react-hot-toast";
 import { LoginContainer, LoginTitle } from "./LoginStyles";
 import FarmsenseLogo from "/big_logo.svg";
 import { Button } from "../../components/Button";
+import { useAuthContext } from "../../auth/AuthProvider";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuthContext();
 
   const validationSchema = Yup.object({
     email: Yup.string().required("Email je obavezan"),
@@ -23,15 +24,18 @@ const Login = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      AuthService.loginUser(values.email, values.password)
-        .then(() => {
-          navigate("/home");
-          toast.success("Uspješno ste se prijavili!", { duration: 150 });
-        })
-        .catch((error) => {
-          toast.error(error.data);
-        });
+    onSubmit: async (values) => {
+      try {
+        await login(values.email, values.password);
+        navigate("/");
+        toast.success("Uspješno ste se prijavili!", { duration: 150 });
+      } catch (error) {
+        if (error instanceof Error && "data" in error) {
+          toast.error((error as any).data);
+        } else {
+          toast.error("An unknown error occurred");
+        }
+      }
     },
   });
 

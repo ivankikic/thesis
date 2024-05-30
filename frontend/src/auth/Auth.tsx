@@ -70,16 +70,17 @@ export default class AuthService {
           accessToken: response.accessToken,
           refreshToken: response.refreshToken || refreshToken,
         });
-        // this.saveCurrentUser(
-        //   response.user.Username,
-        //   response.user.Id,
-        //   response.user.Role
-        // );
+        this.saveCurrentUser(
+          response.user.Username,
+          response.user.Id,
+          response.user.Role
+        );
+        return response.user;
       } else {
         throw new Error("Failed to refresh token");
       }
     } catch (error) {
-      this.removeTokens();
+      this.logoutUser();
       throw error;
     }
   }
@@ -120,6 +121,10 @@ export default class AuthService {
     } catch (error) {}
   }
 
+  static logoutUser() {
+    this.removeTokens();
+  }
+
   static async loginUser(email: string, password: string) {
     try {
       const response = await Api.post({
@@ -129,13 +134,10 @@ export default class AuthService {
           password,
         },
       });
-      const { accessToken, refreshToken } = response;
-      // const user = response.user.Username;
-      // const userId = response.user.Id;
-      // const userRole = response.user.Role;
-      this.saveTokens({ accessToken, refreshToken });
-      // this.saveCurrentUser(user, userId, userRole);
-      return response;
+      const { tokens, userData } = response;
+      this.saveTokens(tokens);
+      this.saveCurrentUser(userData.username, userData.email, userData.role);
+      return userData;
     } catch (error) {
       throw error;
     }
