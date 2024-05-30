@@ -59,12 +59,10 @@ export default class AuthService {
   static async refreshTokens() {
     try {
       const refreshToken = this.getRefreshToken();
-      const userId = this.getCurrentUser();
       if (!refreshToken) throw new Error("No refresh token available");
 
-      const response = await Api.post({
+      const response = await Api.get({
         url: "/api/auth/refresh_token",
-        data: { refreshToken, userId },
       });
 
       if (response.accessToken) {
@@ -72,11 +70,11 @@ export default class AuthService {
           accessToken: response.accessToken,
           refreshToken: response.refreshToken || refreshToken,
         });
-        this.saveCurrentUser(
-          response.user.Username,
-          response.user.Id,
-          response.user.Role
-        );
+        // this.saveCurrentUser(
+        //   response.user.Username,
+        //   response.user.Id,
+        //   response.user.Role
+        // );
       } else {
         throw new Error("Failed to refresh token");
       }
@@ -122,21 +120,21 @@ export default class AuthService {
     } catch (error) {}
   }
 
-  static async loginUser(Username: string, Password: string) {
+  static async loginUser(email: string, password: string) {
     try {
       const response = await Api.post({
         url: "/api/auth/login/",
         data: {
-          Username,
-          Password,
+          email,
+          password,
         },
       });
       const { accessToken, refreshToken } = response;
-      const user = response.user.Username;
-      const userId = response.user.Id;
-      const userRole = response.user.Role;
+      // const user = response.user.Username;
+      // const userId = response.user.Id;
+      // const userRole = response.user.Role;
       this.saveTokens({ accessToken, refreshToken });
-      this.saveCurrentUser(user, userId, userRole);
+      // this.saveCurrentUser(user, userId, userRole);
       return response;
     } catch (error) {
       throw error;

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import AuthService from "../auth/Auth";
 import { Outlet, Navigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar/Sidebar";
+import styled from "styled-components";
+
+const Content = styled.div<{ isOpen: boolean }>`
+  margin-left: ${({ isOpen }) => (isOpen ? "250px" : "0")};
+  transition: margin-left 0.3s ease;
+`;
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,12 +44,22 @@ export const useAuth = () => {
 
 const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? (
+    <div>
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <Content isOpen={isSidebarOpen}>
+        <Outlet />
+      </Content>
+    </div>
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 export default ProtectedRoute;

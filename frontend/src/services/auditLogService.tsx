@@ -1,5 +1,5 @@
-import axiosClient from "../apiClient";
-import { AuditLogType } from "../../assets/types";
+import axiosClient from "../auth/apiClient";
+import { AuditLogType } from "../assets/types";
 
 const createAuditLog = async (auditLog: AuditLogType) => {
   try {

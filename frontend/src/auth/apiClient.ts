@@ -2,31 +2,32 @@ import axios from "axios";
 import AuthService from "./Auth";
 
 const axiosClient = axios.create({
-  baseURL: process.env.BACKEND_URL || "http://localhost:5000",
+  baseURL: import.meta.env.REACT_APP_BACKEND_URL || "http://localhost:5000",
   headers: {
     common: {
       "Content-Type": "application/json",
     },
   },
+  withCredentials: true,
 });
 
 axiosClient.interceptors.request.use(
   async (config) => {
     const accessToken = AuthService.getAccessToken();
-    let userRole = AuthService.getUserRole();
+    // let userRole = AuthService.getUserRole();
 
-    if (userRole === 0) {
-      userRole = AuthService.getChosenCurrentUserRole();
-    }
+    // if (userRole === 0) {
+    //   userRole = AuthService.getChosenCurrentUserRole();
+    // }
 
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     // Add the user role to every request if it exists
-    if (userRole) {
-      config.headers["Role"] = userRole;
-    }
+    // if (userRole) {
+    //   config.headers["Role"] = userRole;
+    // }
 
     config.headers["Content-Type"] =
       config.headers["Content-Type"] || "application/json";

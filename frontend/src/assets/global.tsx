@@ -11,6 +11,7 @@ export const GlobalStyle = () => {
         body {
           color: ${theme.colors.primaryColor};
           background-color: ${theme.colors.backgroundColor};
+          font-family: "Raleway", sans-serif;
         }
 
         html,
@@ -35,7 +36,7 @@ export const GlobalStyle = () => {
         }
 
         input.no-spinners {
-          -moz-appearance: textfield; /* This line is for Firefox */
+          -moz-appearance: textfield;
         }
 
         .material-symbols-rounded {
