@@ -61,7 +61,7 @@ const Sidebar = ({
     items: [],
   });
 
-  const handleContextMenu = (event: React.MouseEvent, items: any) => {
+  const handleContextMenu = (event, items) => {
     event.preventDefault();
     setContextMenu({
       visible: true,
@@ -110,14 +110,44 @@ const Sidebar = ({
               onMouseLeave={() => setHoveredSection(null)}
               onContextMenu={(e) =>
                 handleContextMenu(e, [
-                  { label: "Add new sheet", onClick: addNewSheet },
+                  {
+                    label: "Add new sheet",
+                    onClick: addNewSheet,
+                    type: "item",
+                    actionType: "add_sheet",
+                  },
+                  { type: "divider" },
                   {
                     label: "Duplicate sheet",
                     onClick: () => duplicateSheet("Sheet"),
+                    type: "item",
+                    actionType: "duplicate",
                   },
                   {
                     label: "Delete sheet",
                     onClick: () => deleteSheet("Sheet"),
+                    type: "item",
+                    actionType: "delete",
+                  },
+                  {
+                    type: "input",
+                    placeholder: "Search...",
+                    onChange: (e) => console.log(e.target.value),
+                  },
+                  {
+                    type: "dropdown",
+                    label: "More options",
+                    isOpen: true,
+                    items: [
+                      {
+                        label: "Option 1",
+                        onClick: () => console.log("Option 1"),
+                      },
+                      {
+                        label: "Option 2",
+                        onClick: () => console.log("Option 2"),
+                      },
+                    ],
                   },
                 ])
               }
@@ -139,14 +169,21 @@ const Sidebar = ({
                       {
                         label: "Rename sheet",
                         onClick: () => renameSheet(sheet),
+                        type: "input",
+                        actionType: "rename",
                       },
+                      { type: "divider" },
                       {
                         label: "Duplicate sheet",
                         onClick: () => duplicateSheet(sheet),
+                        type: "item",
+                        actionType: "duplicate",
                       },
                       {
                         label: "Delete sheet",
                         onClick: () => deleteSheet(sheet),
+                        type: "item",
+                        actionType: "delete",
                       },
                     ])
                   }
@@ -161,14 +198,24 @@ const Sidebar = ({
               onMouseLeave={() => setHoveredSection(null)}
               onContextMenu={(e) =>
                 handleContextMenu(e, [
-                  { label: "Add new dashboard", onClick: addNewDashboard },
+                  {
+                    label: "Add new dashboard",
+                    onClick: addNewDashboard,
+                    type: "item",
+                    actionType: "add_dashboard",
+                  },
+                  { type: "divider" },
                   {
                     label: "Duplicate dashboard",
                     onClick: () => duplicateDashboard("Dashboard"),
+                    type: "item",
+                    actionType: "duplicate",
                   },
                   {
                     label: "Delete dashboard",
                     onClick: () => deleteDashboard("Dashboard"),
+                    type: "item",
+                    actionType: "delete",
                   },
                 ])
               }
@@ -194,14 +241,20 @@ const Sidebar = ({
                       {
                         label: "Rename dashboard",
                         onClick: () => renameDashboard(dashboard),
+                        type: "input",
                       },
+                      { type: "divider" },
                       {
                         label: "Duplicate dashboard",
                         onClick: () => duplicateDashboard(dashboard),
+                        type: "item",
+                        actionType: "duplicate",
                       },
                       {
                         label: "Delete dashboard",
                         onClick: () => deleteDashboard(dashboard),
+                        type: "item",
+                        actionType: "delete",
                       },
                     ])
                   }
