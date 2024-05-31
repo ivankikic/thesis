@@ -10,6 +10,14 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS sheets (
+  id integer PRIMARY KEY DEFAULT nextval('sheet_id_seq'::regclass),
+  name VARCHAR(255) NOT NULL,
+  rows jsonb NOT NULL,
+  columns jsonb NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 SELECT * FROM users;
 
 INSERT INTO users (name, surname, email, password) VALUES ('Ivan', 'Kikic', 'ivankikic49@gmail.com', 'admin');

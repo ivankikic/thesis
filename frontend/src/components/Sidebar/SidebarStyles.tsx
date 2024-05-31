@@ -8,20 +8,73 @@ export const SidebarContainer = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? "300px" : "0")};
   height: 100%;
   background-color: ${theme.colors.primary};
-  overflow-x: hidden;
-  transition: width 0.5s;
-  padding-top: 10px;
+  overflow: hidden;
+  transition: width 0.3s;
+  display: flex;
+  flex-direction: column;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 `;
 
-export const SidebarContent = styled.div<{ isOpen: boolean }>`
+export const SidebarContentWrapper = styled.div<{ isOpen: boolean }>`
+  flex: 1;
   opacity: ${(props) => (props.isOpen ? "1" : "0")};
-  transition: opacity 0.5s;
-  padding: 10px 20px;
+  transition: opacity 0.25s;
+`;
+
+export const SidebarContent = styled.div<{ isOpen: boolean }>`
+  flex: 1;
+  opacity: ${(props) => (props.isOpen ? "1" : "0")};
+  transition: opacity 0.25s;
+  padding: 10px 10px;
   display: ${(props) => (props.isOpen ? "block" : "none")};
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #444;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #444;
+    border-radius: 10px; /* Za zaobljene ivice trake */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+    border: 2px solid #444;
+  }
+
+  /* Uklanjanje strelica na vrhu i dnu scrollbara */
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+`;
+
+export const FixedSection = styled.div`
+  position: sticky;
+  top: 0;
+  background-color: ${theme.colors.primary};
+  z-index: 1;
+  padding: 0 10px;
+`;
+
+export const SidebarFooter = styled.div<{ isOpen: boolean }>`
+  opacity: ${(props) => (props.isOpen ? "1" : "0")};
+  transition: opacity 0.25s;
+  border-top: 1px solid #b6b6b655;
+  padding: 15px;
+  background-color: ${theme.colors.primary};
+  color: #e6ebf2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const SidebarTitle = styled.div`
@@ -130,8 +183,37 @@ export const NestedItem = styled.div`
   }
 `;
 
-export const ArrowIcon = styled.img<{ isOpen: boolean }>`
-  transform: ${(props) => (props.isOpen ? "rotate(90deg)" : "rotate(0deg)")};
-  transition: transform 0.3s ease;
-  width: 5px;
+export const ArrowIcon = styled.img<{ isOpen: boolean; isArrow: boolean }>`
+  width: 13px;
+  transform: ${(props) =>
+    props.isArrow ? (props.isOpen ? "rotate(90deg)" : "rotate(0deg)") : "none"};
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const UserInitials = styled.div`
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  color: ${theme.colors.primary};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+`;
+
+export const UserName = styled.div`
+  font-size: 12px;
+`;
+
+export const SettingsIcon = styled.img`
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
 `;
