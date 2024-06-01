@@ -128,6 +128,7 @@ export const SidebarDivider = styled.div`
 
 export const Logo = styled.div`
   width: 100%;
+  cursor: pointer;
   text-align: center;
   padding: 10px 20px;
   color: #fff;

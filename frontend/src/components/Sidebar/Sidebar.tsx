@@ -54,6 +54,7 @@ import useCustomToast from "../../hooks/useCustomToast";
 import ConfirmDeleteSheetModal from "../Modal/DeleteSheetModal";
 import ConfirmDeleteDashboardModal from "../Modal/DeleteDashboardModal";
 import ConfirmDeleteConnectionModal from "../Modal/DeleteConnectionModal";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({
   isOpen,
@@ -62,6 +63,7 @@ const Sidebar = ({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) => {
+  const navigate = useNavigate();
   const [sheetsOpen, setSheetsOpen] = useState(false);
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
   const [connectionsOpen, setConnectionsOpen] = useState(false);
@@ -216,21 +218,21 @@ const Sidebar = ({
       >
         <SidebarContentWrapper isOpen={isOpen}>
           <SidebarContentHeader>
-            <Logo>
+            <Logo onClick={() => navigate("/")}>
               <img src={FarmsenseLogo} alt="Farmsense Logo" />
             </Logo>
             <ToggleButton onClick={() => setIsOpen(false)}>{"<<"}</ToggleButton>
           </SidebarContentHeader>
           <FixedSection>
-            <SidebarItem>
+            <SidebarItem onClick={() => navigate("/import")}>
               <img src={ImportIcon} alt="Import icon" />
               <span>{t("IMPORT")}</span>
             </SidebarItem>
-            <SidebarItem>
+            <SidebarItem onClick={() => navigate("/connect")}>
               <img src={ConnectIcon} alt="Connect icon" />
               <span>{t("CONNECT")}</span>
             </SidebarItem>
-            <SidebarItem>
+            <SidebarItem onClick={() => navigate("/alerting-system")}>
               <img src={AlertIcon} alt="Settings icon" />
               <span>{t("ALERT_SYSTEM")}</span>
             </SidebarItem>
@@ -272,6 +274,7 @@ const Sidebar = ({
                 sheets.map((sheet) => (
                   <NestedItem
                     key={sheet.id}
+                    onClick={() => navigate(`/sheet/${sheet.id}`)}
                     onContextMenu={(e) =>
                       handleContextMenu(e, [
                         {
@@ -375,6 +378,7 @@ const Sidebar = ({
                 dashboards.map((dashboard) => (
                   <NestedItem
                     key={dashboard.id}
+                    onClick={() => navigate(`/dashboard/${dashboard.id}`)}
                     onContextMenu={(e) =>
                       handleContextMenu(e, [
                         {
@@ -467,6 +471,7 @@ const Sidebar = ({
                 connections.map((connection) => (
                   <NestedItem
                     key={connection.id}
+                    onClick={() => navigate(`/connection/${connection.id}`)}
                     onContextMenu={(e) =>
                       handleContextMenu(e, [
                         {
