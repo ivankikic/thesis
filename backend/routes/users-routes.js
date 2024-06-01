@@ -18,12 +18,25 @@ router.post("/", authenticateToken, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const { name, email, username } = req.body;
+    const { email, username } = req.body;
     const newUser = await pool.query(
       "INSERT INTO users (username, email, password) VALUES($1, $2, $3) RETURNING *",
       [username, email, hashedPassword]
     );
     res.json(newUser.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/current", authenticateToken, async (req, res) => {
+  try {
+    const email = req.cookies.email;
+    const user = await pool.query(
+      "SELECT name, surname, email FROM users WHERE email = $1",
+      [email]
+    );
+    res.json(user.rows[0]);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

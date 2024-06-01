@@ -70,12 +70,12 @@ export default class AuthService {
           accessToken: response.accessToken,
           refreshToken: response.refreshToken || refreshToken,
         });
-        this.saveCurrentUser(
-          response.user.Username,
-          response.user.Id,
-          response.user.Role
-        );
-        return response.user;
+        // this.saveCurrentUser(
+        //   response.user.Username,
+        //   response.user.Id,
+        //   response.user.Role
+        // );
+        return response;
       } else {
         throw new Error("Failed to refresh token");
       }
@@ -136,7 +136,7 @@ export default class AuthService {
       });
       const { tokens, userData } = response;
       this.saveTokens(tokens);
-      this.saveCurrentUser(userData.username, userData.email, userData.role);
+      // this.saveCurrentUser(userData.username, userData.email, userData.role);
       return userData;
     } catch (error) {
       console.log(error);

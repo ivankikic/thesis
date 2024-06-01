@@ -31,6 +31,7 @@ const hrHR = {
   DELETE_DASHBOARD: "Izbriši nadzornu ploču",
   DELETE_CONNECTION: "Izbriši vezu",
   MORE_OPTIONS: "Više opcije",
+  LOADING: "Učitavanje...",
 
   // TOAST
   TOAST_SUCCESS_LOGIN: "Uspješno ste se prijavili!",

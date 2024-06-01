@@ -3,6 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useAuthContext } from "../auth/AuthProvider";
 import Sidebar from "../components/Sidebar/Sidebar";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const Content = styled.div<{ isOpen: boolean }>`
   margin-left: ${({ isOpen }) => (isOpen ? "300px" : "0")};
@@ -10,12 +11,15 @@ const Content = styled.div<{ isOpen: boolean }>`
 `;
 
 const ProtectedRoute = () => {
-  const { isLoggedIn, user } = useAuthContext();
+  const { isLoggedIn, loading } = useAuthContext(); // Added loading state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { t } = useTranslation();
 
-  if (!user && isLoggedIn) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div>{t("LOADING")}</div>;
   }
+
+  console.log(isLoggedIn);
 
   return isLoggedIn ? (
     <div>

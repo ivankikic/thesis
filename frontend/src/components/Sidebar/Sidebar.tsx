@@ -47,6 +47,7 @@ import {
   renameConnection,
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
+import { getCurrentUser } from "../../utils/userUtils";
 
 const sheets = ["Sheet 1", "Sheet 2", "Sheet 3"];
 const dashboards = ["Dashboard 1", "Dashboard 2", "Dashboard 3"];
@@ -63,7 +64,16 @@ const Sidebar = ({
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
   const [connectionsOpen, setConnectionsOpen] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
-  const { user } = useAuthContext();
+  const { user, setUser } = useAuthContext();
+  if (!user) {
+    getCurrentUser()
+      .then((fetchedUser) => {
+        setUser(fetchedUser);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch current user:", error);
+      });
+  }
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -110,7 +120,7 @@ const Sidebar = ({
               <span>Connect</span>
             </SidebarItem>
             <SidebarItem>
-              <img src={AlertIcon} alt="Alert system icon" />
+              <img src={AlertIcon} alt="Settings icon" />
               <span>Alert system</span>
             </SidebarItem>
             <SidebarDivider />
@@ -352,11 +362,11 @@ const Sidebar = ({
         <SidebarFooter isOpen={isOpen}>
           <UserInfo>
             <UserInitials>
-              {user.name[0]}
-              {user.surname[0]}
+              {user?.name[0]}
+              {user?.surname[0]}
             </UserInitials>
             <UserName>
-              {user.name} {user.surname}
+              {user?.name} {user?.surname}
             </UserName>
           </UserInfo>
           <SettingsIcon src={SettingsIconImg} alt="Settings icon" />

@@ -7,6 +7,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -16,19 +17,16 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
           const userData = await AuthService.refreshTokens();
           if (userData) {
             setIsLoggedIn(true);
-            setUser(userData);
           } else {
             setIsLoggedIn(false);
-            setUser(null);
           }
         } catch (error) {
           setIsLoggedIn(false);
-          setUser(null);
         }
       } else {
         setIsLoggedIn(false);
-        setUser(null);
       }
+      setLoading(false);
     };
 
     checkAuth();
@@ -51,7 +49,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, user, setUser, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

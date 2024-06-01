@@ -34,6 +34,8 @@ export interface DeleteArguments {
 export interface AuthContextType {
   isLoggedIn: boolean;
   user: any;
+  loading: boolean;
+  setUser: (user: any) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }

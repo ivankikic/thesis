@@ -28,6 +28,10 @@ router.post("/login", async (req, res) => {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
     });
+    res.cookie("email", email, {
+      httpOnly: true,
+    });
+
     const name = user.rows[0].name;
     const surname = user.rows[0].surname;
     const id = user.rows[0].id;
