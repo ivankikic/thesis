@@ -8,14 +8,16 @@ import { LoginContainer, LoginTitle } from "./LoginStyles";
 import FarmsenseLogo from "/big_logo.svg";
 import { Button } from "../../components/Button";
 import { useAuthContext } from "../../auth/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuthContext();
+  const { t } = useTranslation();
 
   const validationSchema = Yup.object({
-    email: Yup.string().required("Email je obavezan"),
-    password: Yup.string().required("Lozinka je obavezna"),
+    email: Yup.string().required(t("EMAIL_REQUIRED")),
+    password: Yup.string().required(t("PASSWORD_REQUIRED")),
   });
 
   const formik = useFormik({
@@ -28,7 +30,7 @@ const Login = () => {
       try {
         await login(values.email, values.password);
         navigate("/");
-        toast.success("Uspješno ste se prijavili!", { duration: 1500 });
+        toast.success(t("TOAST_SUCCESS_LOGIN"), { duration: 1500 });
       } catch (error) {
         toast.error(error as string, { duration: 1500 });
       }
@@ -42,11 +44,11 @@ const Login = () => {
       </LoginTitle>
       <Form noValidate onSubmit={formik.handleSubmit} style={{ width: "35%" }}>
         <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email:</Form.Label>
+          <Form.Label>{t("EMAIL")}:</Form.Label>
           <FormControl
             type="email"
             name="email"
-            placeholder="Vaš email"
+            placeholder={t("YOUR_EMAIL")}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.email}
@@ -58,7 +60,7 @@ const Login = () => {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Lozinka:</Form.Label>
+          <Form.Label>{t("PASSWORD")}:</Form.Label>
           <FormControl
             type="password"
             name="password"
@@ -78,7 +80,7 @@ const Login = () => {
           width={0}
           height={40}
         >
-          Prijavi se
+          {t("LOGIN")}
         </Button>
       </Form>
     </LoginContainer>
