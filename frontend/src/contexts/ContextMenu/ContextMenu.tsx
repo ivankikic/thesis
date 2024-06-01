@@ -13,21 +13,37 @@ import AddSheetIcon from "/icons/contextMenu/add_sheet.svg";
 import DuplicateIcon from "/icons/contextMenu/duplicate.svg";
 import DeleteIcon from "/icons/contextMenu/delete.svg";
 import AddDashboardIcon from "/icons/contextMenu/add_dashboard.svg";
+import AddConnectionIcon from "/icons/contextMenu/add_connection.svg";
 
 const iconMap = {
   add_sheet: AddSheetIcon,
   duplicate: DuplicateIcon,
   delete: DeleteIcon,
   add_dashboard: AddDashboardIcon,
+  add_connection: AddConnectionIcon,
 };
 
-const ContextMenu = ({ items, position, onClose }) => {
-  const menuRef = useRef(null);
-  const [hoveredDropdown, setHoveredDropdown] = useState(null);
+type IconType = keyof typeof iconMap;
+
+interface ContextMenuProps {
+  items: any[];
+  type?: string;
+  position: { x: number; y: number };
+  label?: string;
+  onClick?: () => void;
+  placeholder?: string;
+  actionType?: IconType;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClose: () => void;
+}
+
+const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         onClose();
       }
     };
@@ -40,7 +56,7 @@ const ContextMenu = ({ items, position, onClose }) => {
 
   return (
     <Menu ref={menuRef} style={{ top: position.y, left: position.x }}>
-      {items.map((item, index) => {
+      {items.map((item: ContextMenuProps, index: number) => {
         switch (item.type) {
           case "divider":
             return <MenuDivider key={index} />;
@@ -64,7 +80,7 @@ const ContextMenu = ({ items, position, onClose }) => {
                 <img src={RightArrowIcon} alt="Right arrow icon" />
                 {hoveredDropdown === index && (
                   <SubMenu>
-                    {item.items.map((subItem, subIndex) => (
+                    {item.items.map((subItem: any, subIndex: any) => (
                       <MenuItem key={subIndex} onClick={subItem.onClick}>
                         {subItem.label}
                       </MenuItem>

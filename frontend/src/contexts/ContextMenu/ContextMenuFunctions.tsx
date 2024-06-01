@@ -29,3 +29,19 @@ export const deleteDashboard = (dashboardName: string) => {
 export const renameDashboard = (dashboardName: string) => {
   console.log(`Rename ${dashboardName}`);
 };
+
+export const addNewConnection = () => {
+  console.log("Add new connection");
+};
+
+export const duplicateConnection = (connectionName: string) => {
+  console.log(`Duplicate ${connectionName}`);
+};
+
+export const deleteConnection = (connectionName: string) => {
+  console.log(`Delete ${connectionName}`);
+};
+
+export const renameConnection = (connectionName: string) => {
+  console.log(`Rename ${connectionName}`);
+};

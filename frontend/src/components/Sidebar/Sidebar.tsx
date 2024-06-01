@@ -17,6 +17,7 @@ import {
   SidebarFooter,
   FixedSection,
   SidebarContentWrapper,
+  SidebarContentHeader,
 } from "./SidebarStyles";
 import FarmsenseLogo from "/big_logo_w.svg";
 import ImportIcon from "/icons/import.svg";
@@ -26,7 +27,10 @@ import SheetIcon from "/icons/sheet.svg";
 import SheetsIcon from "/icons/sheets.svg";
 import DashboardIcon from "/icons/dashboard.svg";
 import DashboardsIcon from "/icons/dashboards.svg";
+import ConnectionIcon from "/icons/connection.svg";
+import ConnectionsIcon from "/icons/connections.svg";
 import RightArrowIcon from "/icons/arrow.svg";
+import AlertIcon from "/icons/alert.svg";
 import { useAuthContext } from "../../auth/AuthProvider";
 import {
   addNewSheet,
@@ -37,11 +41,16 @@ import {
   duplicateDashboard,
   deleteDashboard,
   renameDashboard,
+  addNewConnection,
+  duplicateConnection,
+  deleteConnection,
+  renameConnection,
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 
 const sheets = ["Sheet 1", "Sheet 2", "Sheet 3"];
 const dashboards = ["Dashboard 1", "Dashboard 2", "Dashboard 3"];
+const connections = ["Connection 1", "Connection 2", "Connection 3"];
 
 const Sidebar = ({
   isOpen,
@@ -52,6 +61,7 @@ const Sidebar = ({
 }) => {
   const [sheetsOpen, setSheetsOpen] = useState(false);
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
+  const [connectionsOpen, setConnectionsOpen] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const { user } = useAuthContext();
 
@@ -61,7 +71,7 @@ const Sidebar = ({
     items: [],
   });
 
-  const handleContextMenu = (event, items) => {
+  const handleContextMenu = (event: React.MouseEvent, items: any) => {
     event.preventDefault();
     setContextMenu({
       visible: true,
@@ -84,10 +94,12 @@ const Sidebar = ({
         onContextMenu={(e) => e.preventDefault()}
       >
         <SidebarContentWrapper isOpen={isOpen}>
-          <Logo>
-            <img src={FarmsenseLogo} alt="Farmsense Logo" />
-          </Logo>
-          <ToggleButton onClick={() => setIsOpen(false)}>{"<<"}</ToggleButton>
+          <SidebarContentHeader>
+            <Logo>
+              <img src={FarmsenseLogo} alt="Farmsense Logo" />
+            </Logo>
+            <ToggleButton onClick={() => setIsOpen(false)}>{"<<"}</ToggleButton>
+          </SidebarContentHeader>
           <FixedSection>
             <SidebarItem>
               <img src={ImportIcon} alt="Import icon" />
@@ -98,8 +110,8 @@ const Sidebar = ({
               <span>Connect</span>
             </SidebarItem>
             <SidebarItem>
-              <img src={SettingsIconImg} alt="Settings icon" />
-              <span>Settings</span>
+              <img src={AlertIcon} alt="Alert system icon" />
+              <span>Alert system</span>
             </SidebarItem>
             <SidebarDivider />
           </FixedSection>
@@ -132,7 +144,8 @@ const Sidebar = ({
                   {
                     type: "input",
                     placeholder: "Search...",
-                    onChange: (e) => console.log(e.target.value),
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                      console.log(e.target.value),
                   },
                   {
                     type: "dropdown",
@@ -261,6 +274,77 @@ const Sidebar = ({
                 >
                   <img src={DashboardIcon} alt="Dashboard icon" />
                   <span>{dashboard}</span>
+                </NestedItem>
+              ))}
+            <SidebarTitle
+              onClick={() => setConnectionsOpen(!connectionsOpen)}
+              onMouseEnter={() => setHoveredSection("connections")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onContextMenu={(e) =>
+                handleContextMenu(e, [
+                  {
+                    label: "Add new connection",
+                    onClick: addNewConnection,
+                    type: "item",
+                    actionType: "add_connection",
+                  },
+                  { type: "divider" },
+                  {
+                    label: "Duplicate connection",
+                    onClick: () => duplicateConnection("Connection"),
+                    type: "item",
+                    actionType: "duplicate",
+                  },
+                  {
+                    label: "Delete connection",
+                    onClick: () => deleteConnection("Connection"),
+                    type: "item",
+                    actionType: "delete",
+                  },
+                ])
+              }
+            >
+              <ArrowIcon
+                isOpen={connectionsOpen}
+                isArrow={hoveredSection === "connections"}
+                src={
+                  hoveredSection === "connections"
+                    ? RightArrowIcon
+                    : ConnectionsIcon
+                }
+                alt="Icon"
+              />
+              <span>Connections</span>
+            </SidebarTitle>
+            {connectionsOpen &&
+              connections.map((connection) => (
+                <NestedItem
+                  key={connection}
+                  onContextMenu={(e) =>
+                    handleContextMenu(e, [
+                      {
+                        label: "Rename connection",
+                        onClick: () => renameConnection(connection),
+                        type: "input",
+                      },
+                      { type: "divider" },
+                      {
+                        label: "Duplicate connection",
+                        onClick: () => duplicateConnection(connection),
+                        type: "item",
+                        actionType: "duplicate",
+                      },
+                      {
+                        label: "Delete connection",
+                        onClick: () => deleteConnection(connection),
+                        type: "item",
+                        actionType: "delete",
+                      },
+                    ])
+                  }
+                >
+                  <img src={ConnectionIcon} alt="Connection icon" />
+                  <span>{connection}</span>
                 </NestedItem>
               ))}
           </SidebarContent>

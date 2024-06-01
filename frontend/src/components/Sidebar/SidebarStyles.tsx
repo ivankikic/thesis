@@ -18,6 +18,13 @@ export const SidebarContainer = styled.div<{ isOpen: boolean }>`
   -ms-user-select: none;
 `;
 
+export const SidebarContentHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+`;
+
 export const SidebarContentWrapper = styled.div<{ isOpen: boolean }>`
   flex: 1;
   opacity: ${(props) => (props.isOpen ? "1" : "0")};
