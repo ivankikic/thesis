@@ -48,15 +48,17 @@ router.post("/", authenticateToken, async (req, res) => {
     } else {
       let nextId;
       let existingDashboard;
+      const result = await pool.query("SELECT MAX(id) FROM dashboards");
+      nextId = result.rows[0].max + 1;
       do {
-        const result = await pool.query("SELECT MAX(id) FROM dashboards");
-        nextId = result.rows[0].max + 1;
-        dashboardName = `dashboard_${nextId}`;
-
+        dashboardName = `Dashboard_${nextId}`;
         existingDashboard = await pool.query(
           "SELECT * FROM dashboards WHERE name = $1",
           [dashboardName]
         );
+        if (existingDashboard.rows.length > 0) {
+          nextId++;
+        }
       } while (existingDashboard.rows.length > 0);
     }
 
@@ -132,8 +134,8 @@ router.post("/:id/duplicate", authenticateToken, async (req, res) => {
       [id]
     );
 
-    if (originaldashboard.rows.length === 0) {
-      return res.status(404).json({ error: "dashboard not found" });
+    if (originalDashboard.rows.length === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
     }
 
     const { name, data } = originalDashboard.rows[0];

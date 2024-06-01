@@ -41,7 +41,6 @@ import {
   duplicateDashboard,
   deleteDashboard,
   renameDashboard,
-  addNewConnection,
   duplicateConnection,
   deleteConnection,
   renameConnection,
@@ -50,12 +49,11 @@ import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 import { getCurrentUser } from "../../utils/userUtils";
 import { useTranslation } from "react-i18next";
 import axiosClient from "../../auth/apiClient";
-import { Sheet } from "../../utils/types";
+import { Connection, Dashboard, Sheet } from "../../utils/types";
 import useCustomToast from "../../hooks/useCustomToast";
 import ConfirmDeleteSheetModal from "../Modal/DeleteSheetModal";
-
-const dashboards = ["Dashboard 1", "Dashboard 2", "Dashboard 3"];
-const connections = ["Connection 1", "Connection 2", "Connection 3"];
+import ConfirmDeleteDashboardModal from "../Modal/DeleteDashboardModal";
+import ConfirmDeleteConnectionModal from "../Modal/DeleteConnectionModal";
 
 const Sidebar = ({
   isOpen,
@@ -75,6 +73,12 @@ const Sidebar = ({
   const [sheets, setSheets] = useState<Sheet[]>([]);
   const [loadingSheets, setLoadingSheets] = useState(false);
 
+  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
+  const [loadingDashboards, setLoadingDashboards] = useState(false);
+
+  const [connections, setConnections] = useState<Connection[]>([]);
+  const [loadingConnections, setLoadingConnections] = useState(false);
+
   useEffect(() => {
     if (sheetsOpen && sheets.length === 0) {
       setLoadingSheets(true);
@@ -84,6 +88,26 @@ const Sidebar = ({
       });
     }
   }, [sheetsOpen]);
+
+  useEffect(() => {
+    if (dashboardsOpen && dashboards.length === 0) {
+      setLoadingDashboards(true);
+      axiosClient.get("/api/dashboards").then((res) => {
+        setDashboards(res.data);
+        setLoadingDashboards(false);
+      });
+    }
+  }, [dashboardsOpen]);
+
+  useEffect(() => {
+    if (connectionsOpen && connections.length === 0) {
+      setLoadingConnections(true);
+      axiosClient.get("/api/connections").then((res) => {
+        setConnections(res.data);
+        setLoadingConnections(false);
+      });
+    }
+  }, [connectionsOpen]);
 
   if (!user) {
     getCurrentUser()
@@ -120,11 +144,31 @@ const Sidebar = ({
   inputValueRef.current = inputValue;
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteDashboardModal, setShowDeleteDashboardModal] =
+    useState(false);
+  const [showDeleteConnectionModal, setShowDeleteConnectionModal] =
+    useState(false);
   const [sheetToDelete, setSheetToDelete] = useState<number | null>(null);
+  const [dashboardToDelete, setDashboardToDelete] = useState<number | null>(
+    null
+  );
+  const [connectionToDelete, setConnectionToDelete] = useState<number | null>(
+    null
+  );
 
   const handleDeleteSheet = (sheetId: number) => {
     setSheetToDelete(sheetId);
     setShowDeleteModal(true);
+  };
+
+  const handleDeleteDashboard = (dashboardId: number) => {
+    setDashboardToDelete(dashboardId);
+    setShowDeleteDashboardModal(true);
+  };
+
+  const handleDeleteConnection = (connectionId: number) => {
+    setConnectionToDelete(connectionId);
+    setShowDeleteConnectionModal(true);
   };
 
   const confirmDeleteSheet = () => {
@@ -132,6 +176,32 @@ const Sidebar = ({
       deleteSheet(sheetToDelete, setSheets, setLoadingSheets, showToast);
       setShowDeleteModal(false);
       setSheetToDelete(null);
+    }
+  };
+
+  const confirmDeleteDashboard = () => {
+    if (dashboardToDelete) {
+      deleteDashboard(
+        dashboardToDelete,
+        setDashboards,
+        setLoadingDashboards,
+        showToast
+      );
+      setShowDeleteDashboardModal(false);
+      setDashboardToDelete(null);
+    }
+  };
+
+  const confirmDeleteConnection = () => {
+    if (connectionToDelete) {
+      deleteConnection(
+        connectionToDelete,
+        setConnections,
+        setLoadingConnections,
+        showToast
+      );
+      setShowDeleteConnectionModal(false);
+      setConnectionToDelete(null);
     }
   };
 
@@ -269,23 +339,17 @@ const Sidebar = ({
               onContextMenu={(e) =>
                 handleContextMenu(e, [
                   {
-                    label: "Add new dashboard",
-                    onClick: addNewDashboard,
+                    label: t("NEW_DASHBOARD"),
+                    onClick: () => {
+                      addNewDashboard(
+                        setDashboards,
+                        setLoadingDashboards,
+                        showToast
+                      );
+                      closeContextMenu();
+                    },
                     type: "item",
                     actionType: "add_dashboard",
-                  },
-                  { type: "divider" },
-                  {
-                    label: "Duplicate dashboard",
-                    onClick: () => duplicateDashboard("Dashboard"),
-                    type: "item",
-                    actionType: "duplicate",
-                  },
-                  {
-                    label: "Delete dashboard",
-                    onClick: () => deleteDashboard("Dashboard"),
-                    type: "item",
-                    actionType: "delete",
                   },
                 ])
               }
@@ -300,66 +364,87 @@ const Sidebar = ({
                 }
                 alt="Icon"
               />
-              <span>Dashboards</span>
+              <span>{t("DASHBOARDS")}</span>
             </SidebarTitle>
             {dashboardsOpen &&
-              dashboards.map((dashboard) => (
-                <NestedItem
-                  key={dashboard}
-                  onContextMenu={(e) =>
-                    handleContextMenu(e, [
-                      {
-                        label: "Rename dashboard",
-                        onClick: () => renameDashboard(dashboard),
-                        type: "input",
-                      },
-                      { type: "divider" },
-                      {
-                        label: "Duplicate dashboard",
-                        onClick: () => duplicateDashboard(dashboard),
-                        type: "item",
-                        actionType: "duplicate",
-                      },
-                      {
-                        label: "Delete dashboard",
-                        onClick: () => deleteDashboard(dashboard),
-                        type: "item",
-                        actionType: "delete",
-                      },
-                    ])
-                  }
-                >
-                  <img src={DashboardIcon} alt="Dashboard icon" />
-                  <span>{dashboard}</span>
+              (loadingDashboards ? (
+                <NestedItem>
+                  <span>...</span>
                 </NestedItem>
+              ) : (
+                dashboards.map((dashboard) => (
+                  <NestedItem
+                    key={dashboard.id}
+                    onContextMenu={(e) =>
+                      handleContextMenu(e, [
+                        {
+                          label: "Rename dashboard",
+                          onClick: () => {
+                            const currentValue = inputValueRef.current.trim();
+                            if (currentValue === "") {
+                              showToast("error", "ERROR_EMPTY_DASHBOARD_NAME");
+                              return;
+                            }
+                            renameDashboard(
+                              dashboard.id,
+                              currentValue,
+                              showToast
+                            ).then(() => {
+                              setDashboards((prevDashboards) =>
+                                prevDashboards.map((d) =>
+                                  d.id === dashboard.id
+                                    ? { ...d, name: currentValue }
+                                    : d
+                                )
+                              );
+                            });
+                          },
+                          type: "input",
+                          actionType: "rename",
+                          data: dashboard.name,
+                          onChange: (
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setInputValue(e.target.value);
+                          },
+                        },
+                        { type: "divider" },
+                        {
+                          label: "Duplicate dashboard",
+                          onClick: () => {
+                            duplicateDashboard(
+                              dashboard.id,
+                              setDashboards,
+                              setLoadingDashboards,
+                              showToast
+                            );
+                            closeContextMenu();
+                          },
+                          type: "item",
+                          actionType: "duplicate",
+                        },
+                        {
+                          label: "Delete dashboard",
+                          onClick: () => {
+                            handleDeleteDashboard(dashboard.id);
+                            closeContextMenu();
+                          },
+                          type: "item",
+                          actionType: "delete",
+                        },
+                      ])
+                    }
+                  >
+                    <img src={DashboardIcon} alt="Dashboard icon" />
+                    <span>{dashboard.name}</span>
+                  </NestedItem>
+                ))
               ))}
             <SidebarTitle
               onClick={() => setConnectionsOpen(!connectionsOpen)}
               onMouseEnter={() => setHoveredSection("connections")}
               onMouseLeave={() => setHoveredSection(null)}
-              onContextMenu={(e) =>
-                handleContextMenu(e, [
-                  {
-                    label: "Add new connection",
-                    onClick: addNewConnection,
-                    type: "item",
-                    actionType: "add_connection",
-                  },
-                  { type: "divider" },
-                  {
-                    label: "Duplicate connection",
-                    onClick: () => duplicateConnection("Connection"),
-                    type: "item",
-                    actionType: "duplicate",
-                  },
-                  {
-                    label: "Delete connection",
-                    onClick: () => deleteConnection("Connection"),
-                    type: "item",
-                    actionType: "delete",
-                  },
-                ])
-              }
+              onContextMenu={() => {}}
             >
               <ArrowIcon
                 isOpen={connectionsOpen}
@@ -371,38 +456,81 @@ const Sidebar = ({
                 }
                 alt="Icon"
               />
-              <span>Connections</span>
+              <span>{t("CONNECTIONS")}</span>
             </SidebarTitle>
             {connectionsOpen &&
-              connections.map((connection) => (
-                <NestedItem
-                  key={connection}
-                  onContextMenu={(e) =>
-                    handleContextMenu(e, [
-                      {
-                        label: "Rename connection",
-                        onClick: () => renameConnection(connection),
-                        type: "input",
-                      },
-                      { type: "divider" },
-                      {
-                        label: "Duplicate connection",
-                        onClick: () => duplicateConnection(connection),
-                        type: "item",
-                        actionType: "duplicate",
-                      },
-                      {
-                        label: "Delete connection",
-                        onClick: () => deleteConnection(connection),
-                        type: "item",
-                        actionType: "delete",
-                      },
-                    ])
-                  }
-                >
-                  <img src={ConnectionIcon} alt="Connection icon" />
-                  <span>{connection}</span>
+              (loadingConnections ? (
+                <NestedItem>
+                  <span>...</span>
                 </NestedItem>
+              ) : (
+                connections.map((connection) => (
+                  <NestedItem
+                    key={connection.id}
+                    onContextMenu={(e) =>
+                      handleContextMenu(e, [
+                        {
+                          label: "Rename connection",
+                          onClick: () => {
+                            const currentValue = inputValueRef.current.trim();
+                            if (currentValue === "") {
+                              showToast("error", "ERROR_EMPTY_CONNECTION_NAME");
+                              return;
+                            }
+                            renameConnection(
+                              connection.id,
+                              currentValue,
+                              showToast
+                            ).then(() => {
+                              setConnections((prevConnections) =>
+                                prevConnections.map((c) =>
+                                  c.id === connection.id
+                                    ? { ...c, name: currentValue }
+                                    : c
+                                )
+                              );
+                            });
+                          },
+                          type: "input",
+                          actionType: "rename",
+                          data: connection.name,
+                          onChange: (
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setInputValue(e.target.value);
+                          },
+                        },
+                        { type: "divider" },
+                        {
+                          label: "Duplicate connection",
+                          onClick: () => {
+                            duplicateConnection(
+                              connection.id,
+                              setConnections,
+                              setLoadingConnections,
+                              showToast
+                            );
+                            closeContextMenu();
+                          },
+                          type: "item",
+                          actionType: "duplicate",
+                        },
+                        {
+                          label: "Delete connection",
+                          onClick: () => {
+                            handleDeleteConnection(connection.id);
+                            closeContextMenu();
+                          },
+                          type: "item",
+                          actionType: "delete",
+                        },
+                      ])
+                    }
+                  >
+                    <img src={ConnectionIcon} alt="Connection icon" />
+                    <span>{connection.name}</span>
+                  </NestedItem>
+                ))
               ))}
           </SidebarContent>
         </SidebarContentWrapper>
@@ -430,6 +558,16 @@ const Sidebar = ({
         show={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)}
         handleConfirm={confirmDeleteSheet}
+      />
+      <ConfirmDeleteDashboardModal
+        show={showDeleteDashboardModal}
+        handleClose={() => setShowDeleteDashboardModal(false)}
+        handleConfirm={confirmDeleteDashboard}
+      />
+      <ConfirmDeleteConnectionModal
+        show={showDeleteConnectionModal}
+        handleClose={() => setShowDeleteConnectionModal(false)}
+        handleConfirm={confirmDeleteConnection}
       />
     </>
   );

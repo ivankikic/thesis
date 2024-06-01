@@ -51,7 +51,7 @@ router.post("/", authenticateToken, async (req, res) => {
       do {
         const result = await pool.query("SELECT MAX(id) FROM connections");
         nextId = result.rows[0].max + 1;
-        connectionName = `connection_${nextId}`;
+        connectionName = `Connection_${nextId}`;
 
         existingConnection = await pool.query(
           "SELECT * FROM connections WHERE name = $1",

@@ -1,5 +1,5 @@
 import axiosClient from "../../auth/apiClient";
-import { Sheet } from "../../utils/types";
+import { Connection, Dashboard, Sheet } from "../../utils/types";
 
 export const addNewSheet = (
   setSheets: (sheets: Sheet[]) => void,
@@ -115,34 +115,199 @@ export const renameSheet = (
     });
 };
 
-export const addNewDashboard = () => {
-  console.log("Add new dashboard");
+export const addNewDashboard = (
+  setDashboards: (dashboards: Dashboard[]) => void,
+  setLoadingDashboards: (loading: boolean) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  axiosClient
+    .post("/api/dashboards")
+    .then(() => {
+      setLoadingDashboards(true);
+      axiosClient
+        .get("/api/dashboards")
+        .then((res) => {
+          setDashboards(res.data);
+          setLoadingDashboards(false);
+          showToast("success", "TOAST_SUCCESS_NEW_DASHBOARD");
+        })
+        .catch((error) => {
+          setLoadingDashboards(false);
+          showToast("error", error);
+        });
+    })
+    .catch((error) => {
+      showToast("error", error.response.data.error);
+    });
 };
 
-export const duplicateDashboard = (dashboardName: string) => {
-  console.log(`Duplicate ${dashboardName}`);
+export const duplicateDashboard = (
+  dashboardId: number,
+  setDashboards: (dashboards: Dashboard[]) => void,
+  setLoadingDashboards: (loading: boolean) => void,
+  showToast: (
+    type: "success" | "error",
+    message: string,
+    data?: Record<string, any>
+  ) => void
+) => {
+  setLoadingDashboards(true);
+  axiosClient
+    .post(`/api/dashboards/${dashboardId}/duplicate`)
+    .then(() => {
+      axiosClient
+        .get("/api/dashboards")
+        .then((res) => {
+          setDashboards(res.data);
+          setLoadingDashboards(false);
+          showToast("success", "TOAST_SUCCESS_DUPLICATE_DASHBOARD", {
+            name: res.data[res.data.length - 1].name,
+          });
+        })
+        .catch((error) => {
+          setLoadingDashboards(false);
+          showToast("error", error.response.data.error, {
+            name: error.response.data.name,
+          });
+        });
+    })
+    .catch((error) => {
+      setLoadingDashboards(false);
+      showToast("error", error.response.data.error, {
+        name: error.response.data.name,
+      });
+    });
 };
 
-export const deleteDashboard = (dashboardName: string) => {
-  console.log(`Delete ${dashboardName}`);
+export const deleteDashboard = (
+  dashboardId: number,
+  setDashboards: (dashboards: Dashboard[]) => void,
+  setLoadingDashboards: (loading: boolean) => void,
+  showToast: (
+    type: "success" | "error",
+    message: string,
+    data?: Record<string, any>
+  ) => void
+) => {
+  setLoadingDashboards(true);
+  axiosClient
+    .delete(`/api/dashboards/${dashboardId}`)
+    .then(() => {
+      axiosClient
+        .get("/api/dashboards")
+        .then((res) => {
+          setDashboards(res.data);
+          setLoadingDashboards(false);
+          showToast("success", "TOAST_SUCCESS_DELETE_DASHBOARD", {
+            name: res.data[res.data.length - 1].name,
+          });
+        })
+        .catch((error) => {
+          setLoadingDashboards(false);
+          showToast("error", error.response.data.error);
+        });
+    })
+    .catch((error) => {
+      setLoadingDashboards(false);
+      showToast("error", error.response.data.error);
+    });
 };
 
-export const renameDashboard = (dashboardName: string) => {
-  console.log(`Rename ${dashboardName}`);
+export const renameDashboard = (
+  dashboardId: number,
+  newName: string,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  return axiosClient
+    .put(`/api/dashboards/${dashboardId}/rename`, { newName })
+    .then(() => {
+      showToast("success", "TOAST_SUCCESS_RENAME_DASHBOARD");
+    })
+    .catch((error) => {
+      showToast("error", error.response.data.error);
+      throw error;
+    });
 };
 
-export const addNewConnection = () => {
-  console.log("Add new connection");
+export const addNewConnection = (
+  setConnections: (connections: Connection[]) => void,
+  setLoadingConnections: (loading: boolean) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  setLoadingConnections(true);
+  axiosClient
+    .post("/api/connections")
+    .then((res) => {
+      setConnections(res.data);
+      setLoadingConnections(false);
+      showToast("success", "TOAST_SUCCESS_ADD_CONNECTION");
+    })
+    .catch((error) => {
+      setLoadingConnections(false);
+      showToast("error", error.response.data.error);
+    });
 };
 
-export const duplicateConnection = (connectionName: string) => {
-  console.log(`Duplicate ${connectionName}`);
+export const duplicateConnection = (
+  connectionId: number,
+  setConnections: (connections: Connection[]) => void,
+  setLoadingConnections: (loading: boolean) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  setLoadingConnections(true);
+  axiosClient
+    .post(`/api/connections/${connectionId}/duplicate`)
+    .then((res) => {
+      setConnections(res.data);
+      setLoadingConnections(false);
+      showToast("success", "TOAST_SUCCESS_DUPLICATE_CONNECTION");
+    })
+    .catch((error) => {
+      setLoadingConnections(false);
+      showToast("error", error.response.data.error);
+    });
 };
 
-export const deleteConnection = (connectionName: string) => {
-  console.log(`Delete ${connectionName}`);
+export const deleteConnection = (
+  connectionId: number,
+  setConnections: (connections: Connection[]) => void,
+  setLoadingConnections: (loading: boolean) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  setLoadingConnections(true);
+  axiosClient
+    .delete(`/api/connections/${connectionId}`)
+    .then(() => {
+      axiosClient
+        .get("/api/connections")
+        .then((res) => {
+          setConnections(res.data);
+          setLoadingConnections(false);
+          showToast("success", "TOAST_SUCCESS_DELETE_CONNECTION");
+        })
+        .catch((error) => {
+          setLoadingConnections(false);
+          showToast("error", error.response.data.error);
+        });
+    })
+    .catch((error) => {
+      setLoadingConnections(false);
+      showToast("error", error.response.data.error);
+    });
 };
 
-export const renameConnection = (connectionName: string) => {
-  console.log(`Rename ${connectionName}`);
+export const renameConnection = (
+  connectionId: number,
+  newName: string,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  return axiosClient
+    .put(`/api/connections/${connectionId}/rename`, { newName })
+    .then(() => {
+      showToast("success", "TOAST_SUCCESS_RENAME_CONNECTION");
+    })
+    .catch((error) => {
+      showToast("error", error.response.data.error);
+      throw error;
+    });
 };
