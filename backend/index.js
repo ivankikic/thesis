@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import usersRouter from "./routes/users-routes.js";
 import authRouter from "./routes/auth-routes.js";
+import sheetsRouter from "./routes/sheets-routes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 // routes
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/sheets", sheetsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

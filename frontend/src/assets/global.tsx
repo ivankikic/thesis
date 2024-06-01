@@ -39,6 +39,11 @@ export const GlobalStyle = () => {
           -moz-appearance: textfield;
         }
 
+        .custom-modal .modal-header,
+        .custom-modal .modal-footer {
+          border: none;
+        }
+
         .material-symbols-rounded {
           color: red;
           font-size: 36px;

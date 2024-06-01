@@ -12,7 +12,7 @@ CREATE TABLE users (
 
 CREATE TABLE IF NOT EXISTS sheets (
   id integer PRIMARY KEY DEFAULT nextval('sheet_id_seq'::regclass),
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL UNIQUE,
   rows jsonb NOT NULL,
   columns jsonb NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -19,8 +19,6 @@ const ProtectedRoute = () => {
     return <div>{t("LOADING")}</div>;
   }
 
-  console.log(isLoggedIn);
-
   return isLoggedIn ? (
     <div>
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />

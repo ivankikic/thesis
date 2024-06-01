@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   SidebarContainer,
   Logo,
@@ -48,8 +48,12 @@ import {
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 import { getCurrentUser } from "../../utils/userUtils";
+import { useTranslation } from "react-i18next";
+import axiosClient from "../../auth/apiClient";
+import { Sheet } from "../../utils/types";
+import useCustomToast from "../../hooks/useCustomToast";
+import ConfirmDeleteModal from "../Modal/DeleteItemModal"; // Import the modal component
 
-const sheets = ["Sheet 1", "Sheet 2", "Sheet 3"];
 const dashboards = ["Dashboard 1", "Dashboard 2", "Dashboard 3"];
 const connections = ["Connection 1", "Connection 2", "Connection 3"];
 
@@ -64,7 +68,23 @@ const Sidebar = ({
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
   const [connectionsOpen, setConnectionsOpen] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const { t } = useTranslation();
   const { user, setUser } = useAuthContext();
+  const showToast = useCustomToast();
+
+  const [sheets, setSheets] = useState<Sheet[]>([]);
+  const [loadingSheets, setLoadingSheets] = useState(false);
+
+  useEffect(() => {
+    if (sheetsOpen && sheets.length === 0) {
+      setLoadingSheets(true);
+      axiosClient.get("/api/sheets").then((res) => {
+        setSheets(res.data);
+        setLoadingSheets(false);
+      });
+    }
+  }, [sheetsOpen]);
+
   if (!user) {
     getCurrentUser()
       .then((fetchedUser) => {
@@ -94,6 +114,27 @@ const Sidebar = ({
     setContextMenu({ ...contextMenu, visible: false });
   };
 
+  const inputValueRef = useRef("");
+
+  const [inputValue, setInputValue] = useState("");
+  inputValueRef.current = inputValue;
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [sheetToDelete, setSheetToDelete] = useState<number | null>(null);
+
+  const handleDeleteSheet = (sheetId: number) => {
+    setSheetToDelete(sheetId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteSheet = () => {
+    if (sheetToDelete) {
+      deleteSheet(sheetToDelete, setSheets, setLoadingSheets, showToast);
+      setShowDeleteModal(false);
+      setSheetToDelete(null);
+    }
+  };
+
   return (
     <>
       {!isOpen && (
@@ -113,15 +154,15 @@ const Sidebar = ({
           <FixedSection>
             <SidebarItem>
               <img src={ImportIcon} alt="Import icon" />
-              <span>Import</span>
+              <span>{t("IMPORT")}</span>
             </SidebarItem>
             <SidebarItem>
               <img src={ConnectIcon} alt="Connect icon" />
-              <span>Connect</span>
+              <span>{t("CONNECT")}</span>
             </SidebarItem>
             <SidebarItem>
               <img src={AlertIcon} alt="Settings icon" />
-              <span>Alert system</span>
+              <span>{t("ALERT_SYSTEM")}</span>
             </SidebarItem>
             <SidebarDivider />
           </FixedSection>
@@ -133,44 +174,13 @@ const Sidebar = ({
               onContextMenu={(e) =>
                 handleContextMenu(e, [
                   {
-                    label: "Add new sheet",
-                    onClick: addNewSheet,
+                    label: t("NEW_SHEET"),
+                    onClick: () => {
+                      addNewSheet(setSheets, setLoadingSheets, showToast);
+                      closeContextMenu();
+                    },
                     type: "item",
                     actionType: "add_sheet",
-                  },
-                  { type: "divider" },
-                  {
-                    label: "Duplicate sheet",
-                    onClick: () => duplicateSheet("Sheet"),
-                    type: "item",
-                    actionType: "duplicate",
-                  },
-                  {
-                    label: "Delete sheet",
-                    onClick: () => deleteSheet("Sheet"),
-                    type: "item",
-                    actionType: "delete",
-                  },
-                  {
-                    type: "input",
-                    placeholder: "Search...",
-                    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-                      console.log(e.target.value),
-                  },
-                  {
-                    type: "dropdown",
-                    label: "More options",
-                    isOpen: true,
-                    items: [
-                      {
-                        label: "Option 1",
-                        onClick: () => console.log("Option 1"),
-                      },
-                      {
-                        label: "Option 2",
-                        onClick: () => console.log("Option 2"),
-                      },
-                    ],
                   },
                 ])
               }
@@ -181,39 +191,76 @@ const Sidebar = ({
                 src={hoveredSection === "sheets" ? RightArrowIcon : SheetsIcon}
                 alt="Icon"
               />
-              <span>Sheets</span>
+              <span>{t("SHEETS")}</span>
             </SidebarTitle>
             {sheetsOpen &&
-              sheets.map((sheet) => (
-                <NestedItem
-                  key={sheet}
-                  onContextMenu={(e) =>
-                    handleContextMenu(e, [
-                      {
-                        label: "Rename sheet",
-                        onClick: () => renameSheet(sheet),
-                        type: "input",
-                        actionType: "rename",
-                      },
-                      { type: "divider" },
-                      {
-                        label: "Duplicate sheet",
-                        onClick: () => duplicateSheet(sheet),
-                        type: "item",
-                        actionType: "duplicate",
-                      },
-                      {
-                        label: "Delete sheet",
-                        onClick: () => deleteSheet(sheet),
-                        type: "item",
-                        actionType: "delete",
-                      },
-                    ])
-                  }
-                >
-                  <img src={SheetIcon} alt="Sheet icon" />
-                  <span>{sheet}</span>
+              (loadingSheets ? (
+                <NestedItem>
+                  <span>...</span>
                 </NestedItem>
+              ) : (
+                sheets.map((sheet) => (
+                  <NestedItem
+                    key={sheet.id}
+                    onContextMenu={(e) =>
+                      handleContextMenu(e, [
+                        {
+                          label: "Rename sheet",
+                          onClick: () => {
+                            const currentValue = inputValueRef.current.trim();
+                            if (currentValue === "") {
+                              showToast("error", "ERROR_EMPTY_SHEET_NAME");
+                              return;
+                            }
+                            renameSheet(sheet.id, currentValue, showToast).then(
+                              () => {
+                                setSheets((prevSheets) =>
+                                  prevSheets.map((s) =>
+                                    s.id === sheet.id
+                                      ? { ...s, name: currentValue }
+                                      : s
+                                  )
+                                );
+                              }
+                            );
+                          },
+                          type: "input",
+                          actionType: "rename",
+                          data: sheet.name,
+                          onChange: (
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setInputValue(e.target.value);
+                          },
+                        },
+                        { type: "divider" },
+                        {
+                          label: "Duplicate sheet",
+                          onClick: () => {
+                            duplicateSheet(
+                              sheet.id,
+                              setSheets,
+                              setLoadingSheets,
+                              showToast
+                            );
+                            closeContextMenu();
+                          },
+                          type: "item",
+                          actionType: "duplicate",
+                        },
+                        {
+                          label: "Delete sheet",
+                          onClick: () => handleDeleteSheet(sheet.id),
+                          type: "item",
+                          actionType: "delete",
+                        },
+                      ])
+                    }
+                  >
+                    <img src={SheetIcon} alt="Sheet icon" />
+                    <span>{sheet.name}</span>
+                  </NestedItem>
+                ))
               ))}
             <SidebarTitle
               onClick={() => setDashboardsOpen(!dashboardsOpen)}
@@ -379,6 +426,11 @@ const Sidebar = ({
           onClose={closeContextMenu}
         />
       )}
+      <ConfirmDeleteModal
+        show={showDeleteModal}
+        handleClose={() => setShowDeleteModal(false)}
+        handleConfirm={confirmDeleteSheet}
+      />
     </>
   );
 };

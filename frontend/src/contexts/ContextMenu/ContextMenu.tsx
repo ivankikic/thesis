@@ -30,6 +30,7 @@ interface ContextMenuProps {
   type?: string;
   position: { x: number; y: number };
   label?: string;
+  data?: string;
   onClick?: () => void;
   placeholder?: string;
   actionType?: IconType;
@@ -40,6 +41,7 @@ interface ContextMenuProps {
 const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState<string>("");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,6 +56,31 @@ const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    const inputItem = items.find((item) => item.type === "input");
+    if (inputItem) {
+      setInputValue(inputItem.data || "");
+    }
+  }, [items]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: any
+  ) => {
+    setInputValue(e.target.value);
+    if (onChange) onChange(e);
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    onClick: any
+  ) => {
+    if (e.key === "Enter" && onClick) {
+      onClick(e.currentTarget.value);
+      onClose();
+    }
+  };
+
   return (
     <Menu ref={menuRef} style={{ top: position.y, left: position.x }}>
       {items.map((item: ContextMenuProps, index: number) => {
@@ -66,7 +93,9 @@ const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
                 key={index}
                 type="text"
                 placeholder={item.placeholder}
-                onChange={item.onChange}
+                onChange={(e) => handleInputChange(e, item.onChange)}
+                onKeyDown={(e) => handleKeyDown(e, item.onClick)}
+                value={inputValue}
               />
             );
           case "dropdown":
