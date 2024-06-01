@@ -1,4 +1,5 @@
 const hrHR = {
+  // GENERAL
   SHEET: "Sheet",
   SHEETS: "Tablice",
   DASHBOARD: "Nadzorna ploča",

@@ -8,7 +8,7 @@ interface ConfirmDeleteModalProps {
   handleConfirm: () => void;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+const ConfirmDeleteDashboardModal: React.FC<ConfirmDeleteModalProps> = ({
   show,
   handleClose,
   handleConfirm,
@@ -20,7 +20,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       <Modal.Header closeButton>
         <Modal.Title>{t("CONFIRMATION")}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{t("CONFIRM_DELETE_SHEET")}</Modal.Body>
+      <Modal.Body>{t("CONFIRM_DELETE_DASHBOARD")}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           {t("CANCEL")}
@@ -33,4 +33,4 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   );
 };
 
-export default ConfirmDeleteModal;
+export default ConfirmDeleteDashboardModal;

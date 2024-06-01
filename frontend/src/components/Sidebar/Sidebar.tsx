@@ -52,7 +52,7 @@ import { useTranslation } from "react-i18next";
 import axiosClient from "../../auth/apiClient";
 import { Sheet } from "../../utils/types";
 import useCustomToast from "../../hooks/useCustomToast";
-import ConfirmDeleteModal from "../Modal/DeleteItemModal"; // Import the modal component
+import ConfirmDeleteSheetModal from "../Modal/DeleteSheetModal";
 
 const dashboards = ["Dashboard 1", "Dashboard 2", "Dashboard 3"];
 const connections = ["Connection 1", "Connection 2", "Connection 3"];
@@ -426,7 +426,7 @@ const Sidebar = ({
           onClose={closeContextMenu}
         />
       )}
-      <ConfirmDeleteModal
+      <ConfirmDeleteSheetModal
         show={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)}
         handleConfirm={confirmDeleteSheet}

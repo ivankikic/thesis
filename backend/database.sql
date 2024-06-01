@@ -18,6 +18,22 @@ CREATE TABLE IF NOT EXISTS sheets (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS dashboards (
+  id integer PRIMARY KEY DEFAULT nextval('dashboard_id_seq'::regclass),
+  name VARCHAR(255) NOT NULL UNIQUE,
+  data jsonb NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS connections (
+  id integer PRIMARY KEY DEFAULT nextval('connection_id_seq'::regclass),
+  name VARCHAR(255) NOT NULL UNIQUE,
+  sheet_id integer NOT NULL,
+  status VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 SELECT * FROM users;
 
 INSERT INTO users (name, surname, email, password) VALUES ('Ivan', 'Kikic', 'ivankikic49@gmail.com', 'admin');
