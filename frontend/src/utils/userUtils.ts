@@ -1,3 +1,4 @@
+import AuthService from "../auth/Auth";
 import axiosClient from "../auth/apiClient";
 
 export const getCurrentUser = async () => {
@@ -9,4 +10,8 @@ export const getCurrentUser = async () => {
     console.error("Failed to fetch current user:", error);
     throw error;
   }
+};
+
+export const LogoutUser = async () => {
+  AuthService.removeTokens();
 };

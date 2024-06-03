@@ -33,6 +33,19 @@ CREATE TABLE IF NOT EXISTS connections (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+  name VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,
+  value VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id integer PRIMARY KEY DEFAULT nextval('audit_log_id_seq'::regclass),
+  user_id uuid NOT NULL,
+  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  log_type VARCHAR(255) NOT NULL,
+  data jsonb NOT NULL
+);
+
 
 SELECT * FROM users;
 

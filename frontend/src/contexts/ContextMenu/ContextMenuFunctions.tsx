@@ -1,4 +1,6 @@
+import { AuditLogTypes } from "../../assets/types";
 import axiosClient from "../../auth/apiClient";
+import { createAuditLog } from "../../services/auditLogService";
 import { Connection, Dashboard, Sheet } from "../../utils/types";
 
 export const addNewSheet = (
@@ -6,24 +8,33 @@ export const addNewSheet = (
   setLoadingSheets: (loading: boolean) => void,
   showToast: (type: "success" | "error", message: string) => void
 ) => {
+  setLoadingSheets(true);
   axiosClient
     .post("/api/sheets")
-    .then(() => {
-      setLoadingSheets(true);
-      axiosClient
-        .get("/api/sheets")
-        .then((res) => {
-          setSheets(res.data);
-          setLoadingSheets(false);
-          showToast("success", "TOAST_SUCCESS_NEW_SHEET");
-        })
-        .catch((error) => {
-          setLoadingSheets(false);
-          showToast("error", error);
+    .then(async (response) => {
+      const newSheet = response.data;
+      try {
+        const res = await axiosClient.get("/api/sheets");
+        setSheets(res.data);
+        setLoadingSheets(false);
+        showToast("success", "TOAST_SUCCESS_NEW_SHEET");
+        await createAuditLog({
+          LogType: AuditLogTypes.SHEET_CREATE,
+          Data: JSON.stringify(newSheet),
         });
+      } catch (error: any) {
+        showToast(
+          "error",
+          error.response.data.error ?? "ERROR_SOMETHING_WENT_WRONG"
+        );
+      }
     })
-    .catch((error) => {
-      showToast("error", error.response.data.error);
+    .catch((error: any) => {
+      setLoadingSheets(false);
+      showToast(
+        "error",
+        error.response.data.error ?? "ERROR_SOMETHING_WENT_WRONG"
+      );
     });
 };
 
@@ -40,24 +51,24 @@ export const duplicateSheet = (
   setLoadingSheets(true);
   axiosClient
     .post(`/api/sheets/${sheetId}/duplicate`)
-    .then(() => {
-      axiosClient
-        .get("/api/sheets")
-        .then((res) => {
-          setSheets(res.data);
-          setLoadingSheets(false);
-          showToast("success", "TOAST_SUCCESS_DUPLICATE_SHEET", {
-            name: res.data[res.data.length - 1].name,
-          });
-        })
-        .catch((error) => {
-          setLoadingSheets(false);
-          showToast("error", error.response.data.error, {
-            name: error.response.data.name,
-          });
+    .then(async (response) => {
+      const newSheet = response.data;
+      try {
+        const res = await axiosClient.get("/api/sheets");
+        setSheets(res.data);
+        setLoadingSheets(false);
+        showToast("success", "TOAST_SUCCESS_DUPLICATE_SHEET", {
+          name: newSheet.name,
         });
+        await createAuditLog({
+          LogType: AuditLogTypes.SHEET_DUPLICATE,
+          Data: JSON.stringify(newSheet),
+        });
+      } catch (error: any) {
+        console.error(error);
+      }
     })
-    .catch((error) => {
+    .catch((error: any) => {
       setLoadingSheets(false);
       showToast("error", error.response.data.error, {
         name: error.response.data.name,
@@ -65,7 +76,7 @@ export const duplicateSheet = (
     });
 };
 
-export const deleteSheet = (
+export const deleteSheet = async (
   sheetId: number,
   setSheets: (sheets: Sheet[]) => void,
   setLoadingSheets: (loading: boolean) => void,
@@ -76,27 +87,25 @@ export const deleteSheet = (
   ) => void
 ) => {
   setLoadingSheets(true);
-  axiosClient
-    .delete(`/api/sheets/${sheetId}`)
-    .then(() => {
-      axiosClient
-        .get("/api/sheets")
-        .then((res) => {
-          setSheets(res.data);
-          setLoadingSheets(false);
-          showToast("success", "TOAST_SUCCESS_DELETE_SHEET", {
-            name: res.data[res.data.length - 1].name,
-          });
-        })
-        .catch((error) => {
-          setLoadingSheets(false);
-          showToast("error", error.response.data.error);
-        });
-    })
-    .catch((error) => {
-      setLoadingSheets(false);
-      showToast("error", error.response.data.error);
+  try {
+    await axiosClient.delete(`/api/sheets/${sheetId}`);
+    const res = await axiosClient.get("/api/sheets");
+    setSheets(res.data);
+    setLoadingSheets(false);
+    showToast("success", "TOAST_SUCCESS_DELETE_SHEET", {
+      name: res.data.find((sheet: Sheet) => sheet.id === sheetId)?.name,
     });
+    await createAuditLog({
+      LogType: AuditLogTypes.SHEET_DELETE,
+      Data: JSON.stringify({ id: sheetId }),
+    });
+  } catch (error: any) {
+    setLoadingSheets(false);
+    showToast(
+      "error",
+      error.response.data.error ?? "ERROR_SOMETHING_WENT_WRONG"
+    );
+  }
 };
 
 export const renameSheet = (
@@ -106,11 +115,20 @@ export const renameSheet = (
 ) => {
   return axiosClient
     .put(`/api/sheets/${sheetId}/rename`, { newName })
-    .then(() => {
+    .then(async () => {
       showToast("success", "TOAST_SUCCESS_RENAME_SHEET");
+      const res = await axiosClient.get(`/api/sheets/${sheetId}`);
+      console.log(res);
+      await createAuditLog({
+        LogType: AuditLogTypes.SHEET_RENAME,
+        Data: JSON.stringify({ id: sheetId, name: newName }),
+      });
     })
-    .catch((error) => {
-      showToast("error", error.response.data.error);
+    .catch((error: any) => {
+      showToast(
+        "error",
+        error.response.data.error ?? "ERROR_SOMETHING_WENT_WRONG"
+      );
       throw error;
     });
 };
@@ -131,12 +149,12 @@ export const addNewDashboard = (
           setLoadingDashboards(false);
           showToast("success", "TOAST_SUCCESS_NEW_DASHBOARD");
         })
-        .catch((error) => {
+        .catch((error: any) => {
           setLoadingDashboards(false);
           showToast("error", error);
         });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       showToast("error", error.response.data.error);
     });
 };
@@ -164,14 +182,14 @@ export const duplicateDashboard = (
             name: res.data[res.data.length - 1].name,
           });
         })
-        .catch((error) => {
+        .catch((error: any) => {
           setLoadingDashboards(false);
           showToast("error", error.response.data.error, {
             name: error.response.data.name,
           });
         });
     })
-    .catch((error) => {
+    .catch((error: any) => {
       setLoadingDashboards(false);
       showToast("error", error.response.data.error, {
         name: error.response.data.name,

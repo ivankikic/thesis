@@ -86,8 +86,8 @@ const Sidebar = ({
       setLoadingSheets(true);
       axiosClient.get("/api/sheets").then((res) => {
         setSheets(res.data);
-        setLoadingSheets(false);
       });
+      setLoadingSheets(false);
     }
   }, [sheetsOpen]);
 
@@ -96,8 +96,8 @@ const Sidebar = ({
       setLoadingDashboards(true);
       axiosClient.get("/api/dashboards").then((res) => {
         setDashboards(res.data);
-        setLoadingDashboards(false);
       });
+      setLoadingDashboards(false);
     }
   }, [dashboardsOpen]);
 
@@ -106,8 +106,8 @@ const Sidebar = ({
       setLoadingConnections(true);
       axiosClient.get("/api/connections").then((res) => {
         setConnections(res.data);
-        setLoadingConnections(false);
       });
+      setLoadingConnections(false);
     }
   }, [connectionsOpen]);
 

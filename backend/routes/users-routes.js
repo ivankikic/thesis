@@ -33,7 +33,7 @@ router.get("/current", authenticateToken, async (req, res) => {
   try {
     const email = req.cookies.email;
     const user = await pool.query(
-      "SELECT name, surname, email FROM users WHERE email = $1",
+      "SELECT id, name, surname, email FROM users WHERE email = $1",
       [email]
     );
     res.json(user.rows[0]);

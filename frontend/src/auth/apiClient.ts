@@ -14,27 +14,24 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   async (config) => {
     const accessToken = AuthService.getAccessToken();
-    // let userRole = AuthService.getUserRole();
-
-    // if (userRole === 0) {
-    //   userRole = AuthService.getChosenCurrentUserRole();
-    // }
-
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-
-    // Add the user role to every request if it exists
-    // if (userRole) {
-    //   config.headers["Role"] = userRole;
-    // }
-
     config.headers["Content-Type"] =
       config.headers["Content-Type"] || "application/json";
-
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 403) {
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosClient;

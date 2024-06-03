@@ -1,13 +1,16 @@
 import { AxiosRequestConfig } from "axios";
 
 export type AuditLogType = {
-  UserId: string;
   LogType: string;
   Data: string;
 };
 
 export enum AuditLogTypes {
-  CODE_CHANGE = "CODE_CHANGE",
+  SHEET_CREATE = "SHEET_CREATE",
+  SHEET_UPDATE = "SHEET_UPDATE",
+  SHEET_RENAME = "SHEET_RENAME",
+  SHEET_DUPLICATE = "SHEET_DUPLICATE",
+  SHEET_DELETE = "SHEET_DELETE",
 }
 
 export interface Tokens {
@@ -47,4 +50,12 @@ export interface Props {
   startDate: Date | null;
   endDate: Date | null;
   today: Date | null;
+}
+
+export interface AuditLog {
+  id: number;
+  user_id: number;
+  date: Date;
+  log_type: string;
+  data: any;
 }

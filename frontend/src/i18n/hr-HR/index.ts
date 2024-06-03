@@ -68,6 +68,8 @@ const hrHR = {
   ERROR_EMPTY_SHEET_NAME: "Naziv tablice ne smije biti prazan",
   ERROR_EMPTY_DASHBOARD_NAME: "Naziv nadzorne ploče ne smije biti prazan",
   ERROR_EMPTY_CONNECTION_NAME: "Naziv veze ne smije biti prazan",
+  ERROR_SOMETHING_WENT_WRONG:
+    "Došlo je do neočekivane pogreške! Pokušajte ponovno kasnije",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -79,6 +81,16 @@ const hrHR = {
   IMPORT_DATA_DESCRIPTION:
     "Uvoz podataka je moguće izvršiti preko CSV fajla. Fajl mora sadržavati podatke u formatu koji se podržavaju u aplikaciji. Podatke uvozite u tablicu klikom na dugme 'Uvoz' na stranici tablice.",
   IMPORT_DATA_BUTTON: "Uvoz",
+
+  // SETTINGS
+  CONFIRM_LOGOUT: "Jeste li sigurni da se želite odjaviti?",
+  LANGUAGE: "Jezik",
+  AUDIT_LOG: "Audit log",
+  AUDIT_LOGS: "Audit logovi",
+  FROM_DATE: "Od",
+  TO_DATE: "Do",
+  SHOW_LOGS: "Prikaži",
+  NO_DATA_AVAILABLE: "Trenutno nema dostupnih podataka",
 };
 
 export default hrHR;
