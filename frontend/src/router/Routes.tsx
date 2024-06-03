@@ -10,6 +10,7 @@ import UserSettings from "../pages/UserSettings/UserSettings";
 import Sheet from "../pages/Sheet/Sheet";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Connection from "../pages/Connection/Connection";
+import Settings from "../pages/Settings/Settings";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="/sheet/:id" element={<Sheet />} />
         <Route path="/dashboard/:id" element={<Dashboard />} />
         <Route path="/connection/:id" element={<Connection />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>
   );

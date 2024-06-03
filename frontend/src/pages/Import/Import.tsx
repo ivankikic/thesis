@@ -1,5 +1,7 @@
+import { Container } from "../PagesStyles";
+
 const Import = () => {
-  return <div>Import</div>;
+  return <Container>test</Container>;
 };
 
 export default Import;

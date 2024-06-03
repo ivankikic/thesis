@@ -549,7 +549,11 @@ const Sidebar = ({
               {user?.name} {user?.surname}
             </UserName>
           </UserInfo>
-          <SettingsIcon src={SettingsIconImg} alt="Settings icon" />
+          <SettingsIcon
+            onClick={() => navigate("/settings")}
+            src={SettingsIconImg}
+            alt="Settings icon"
+          />
         </SidebarFooter>
       </SidebarContainer>
       {contextMenu.visible && (
