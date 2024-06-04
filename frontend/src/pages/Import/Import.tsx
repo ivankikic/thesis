@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import * as XLSX from "xlsx";
 import { useState, useEffect } from "react";
 import axiosClient from "../../auth/apiClient";
-import { ImportLog } from "../../utils/types";
+import { FileType, ImportLog } from "../../utils/types";
 import dayjs from "dayjs";
 import deleteIcon from "/icons/pages/delete_w.svg";
 import ConfirmDeleteImportModal from "../../components/Modal/DeleteImportModal";
@@ -25,39 +25,42 @@ import toast from "react-hot-toast";
 
 const Import = () => {
   const { t } = useTranslation();
-  const [files, setFiles] = useState([]);
-  const [importLogs, setImportLogs] = useState([]);
+  const [_, setFiles] = useState<FileType[]>([]);
+  const [importLogs, setImportLogs] = useState<ImportLog[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     const selectedFiles = event.target.files;
-    const acceptedFiles = Array.from(selectedFiles);
-    acceptedFiles.forEach((file) => {
+    const acceptedFiles: FileType[] = Array.from(selectedFiles) as FileType[];
+    acceptedFiles.forEach((file: FileType) => {
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
-        console.log(json); // Ovdje možeš obraditi podatke ili ih poslati na backend
+        if (e.target?.result) {
+          const data = new Uint8Array(e.target.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet);
+          console.log(json); // data for backend
 
-        // Pretpostavimo da je import uspješan
-        const status = "imported";
-        try {
-          const response = await axiosClient.post("/api/import", {
-            fileName: file.name,
-            status: status,
-          });
-          setImportLogs([...importLogs, response.data]);
-        } catch (error) {
-          console.error("Error saving import log:", error);
+          const status = "imported";
+          try {
+            const response = await axiosClient.post("/api/import", {
+              fileName: file.name,
+              status: status,
+            });
+            setImportLogs([...importLogs, response.data]);
+          } catch (error) {
+            console.error("Error saving import log:", error);
+          }
+        } else {
+          console.error("File reading failed.");
         }
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsArrayBuffer(file as unknown as Blob);
     });
-    setFiles(acceptedFiles);
+    setFiles(acceptedFiles); // file info
   };
 
   useEffect(() => {

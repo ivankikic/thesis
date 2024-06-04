@@ -24,3 +24,8 @@ export type ImportLog = {
   status: string;
   created_at: string;
 };
+
+export type FileType = {
+  name: string;
+  status: string;
+};
