@@ -53,6 +53,14 @@ CREATE TABLE file_imports (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE sensors (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  rows_counter INTEGER NOT NULL,
+  sheet_id INTEGER NOT NULL,
+  location VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 SELECT * FROM users;
 
