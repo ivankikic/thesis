@@ -1,8 +1,8 @@
 export type Sheet = {
   id: number;
   name: string;
-  rows: JSON;
-  columns: JSON;
+  rows: any[];
+  columns: any[];
 };
 
 export type Dashboard = {

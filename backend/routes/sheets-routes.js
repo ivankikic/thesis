@@ -15,12 +15,10 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 // Get a sheet
-router.get("/:name", authenticateToken, async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
-    const { name } = req.params;
-    const sheet = await pool.query("SELECT * FROM sheets WHERE name = $1", [
-      name,
-    ]);
+    const { id } = req.params;
+    const sheet = await pool.query("SELECT * FROM sheets WHERE id = $1", [id]);
     res.json(sheet.rows[0]);
   } catch (error) {
     res.status(500).json({ error: error.message });

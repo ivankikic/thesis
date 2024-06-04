@@ -6,3 +6,8 @@ export const isSheetNameAlreadyTaken = async (name: string) => {
   });
   return response.data;
 };
+
+export const getSheet = async (id: string) => {
+  const response = await axiosClient.get(`/api/sheets/${id}`);
+  return response.data;
+};
