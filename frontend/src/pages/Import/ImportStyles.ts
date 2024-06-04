@@ -26,8 +26,9 @@ export const ImportButtonContainer = styled.div`
 `;
 
 export const ImportButton = styled.div`
-  padding: 6px 12px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  line-height: 14px;
   cursor: pointer;
   border: none;
   font-size: 0.9rem;

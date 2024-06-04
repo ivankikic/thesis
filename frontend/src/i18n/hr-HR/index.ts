@@ -55,6 +55,7 @@ const hrHR = {
   TOAST_SUCCESS_RENAME_DASHBOARD: "Nadzorna ploča uspješno preimenovana!",
   TOAST_SUCCESS_RENAME_CONNECTION: "Veza uspješno preimenovana!",
   TOAST_SUCCESS_DELETE_IMPORT: "Datoteka uspješno izbrisana!",
+  TOAST_SUCCESS_IMPORT: "Datoteka je uspješno uvezena!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -73,6 +74,8 @@ const hrHR = {
     "Došlo je do neočekivane pogreške! Pokušajte ponovno kasnije",
   ERROR_DELETE_IMPORT:
     "Došlo je do neočekivane pogreške prilikom brisanja datoteke!",
+  ERROR_IMPORT: "Došlo je do neočekivane pogreške prilikom uvoza datoteke!",
+  ERROR_NAME_ALREADY_TAKEN: "Tablica s imenom '{{name}}' već postoji",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -86,6 +89,7 @@ const hrHR = {
   IMPORT_DATA_BUTTON: "Uvoz",
   IMPORT_IT: "Uvezi",
   IMPORT_FILE: "Uvoz datoteke",
+  IMPORT_PREVIEW: "Pretpregled uvoza",
   FILES: "Datoteke",
   ALLOWED_EXTENSIONS: "Dozvoljene ekstenzije: .csv, .xlsx, .xls",
   IMPORTED: "Uvezeno", // ??
@@ -95,6 +99,13 @@ const hrHR = {
   FILE_NAME: "Naziv datoteke",
   STATUS: "Status",
   DATE: "Datum",
+  ROW_COUNT: "Broj redova",
+  COLUMN_COUNT: "Broj stupaca",
+  COLUMNS: "Stupci",
+  COLUMN_NAMES: "Nazivi stupaca",
+  COLUMN_NAMES_INFO:
+    "Nazivi stupaca se mogu razlikovati od naziva stupaca u datoteci. Ako ih program nije prepoznao označio ih je crvenom bojom i mapirat će ih kao 'unknown' ukoliko ne napravite izmjene.",
+  SHEET_NAME: "Naziv tablice",
 
   // SETTINGS
   CONFIRM_LOGOUT: "Jeste li sigurni da se želite odjaviti?",

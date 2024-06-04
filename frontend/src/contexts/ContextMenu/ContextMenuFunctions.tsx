@@ -88,9 +88,9 @@ export const deleteSheet = async (
 ) => {
   setLoadingSheets(true);
   try {
-    await axiosClient.delete(`/api/sheets/${sheetId}`);
     const res = await axiosClient.get("/api/sheets");
-    setSheets(res.data);
+    await axiosClient.delete(`/api/sheets/${sheetId}`);
+    setSheets(res.data.filter((sheet: Sheet) => sheet.id !== sheetId));
     setLoadingSheets(false);
     showToast("success", "TOAST_SUCCESS_DELETE_SHEET", {
       name: res.data.find((sheet: Sheet) => sheet.id === sheetId)?.name,

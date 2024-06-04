@@ -49,12 +49,13 @@ import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 import { getCurrentUser } from "../../utils/userUtils";
 import { useTranslation } from "react-i18next";
 import axiosClient from "../../auth/apiClient";
-import { Connection, Dashboard, Sheet } from "../../utils/types";
+import { Connection, Dashboard } from "../../utils/types";
 import useCustomToast from "../../hooks/useCustomToast";
 import ConfirmDeleteSheetModal from "../Modal/DeleteSheetModal";
 import ConfirmDeleteDashboardModal from "../Modal/DeleteDashboardModal";
 import ConfirmDeleteConnectionModal from "../Modal/DeleteConnectionModal";
 import { useNavigate } from "react-router-dom";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 const Sidebar = ({
   isOpen,
@@ -72,7 +73,7 @@ const Sidebar = ({
   const { user, setUser } = useAuthContext();
   const showToast = useCustomToast();
 
-  const [sheets, setSheets] = useState<Sheet[]>([]);
+  const { sheets, setSheets, reloadSheets } = useSidebar();
   const [loadingSheets, setLoadingSheets] = useState(false);
 
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
@@ -286,15 +287,7 @@ const Sidebar = ({
                               return;
                             }
                             renameSheet(sheet.id, currentValue, showToast).then(
-                              () => {
-                                setSheets((prevSheets) =>
-                                  prevSheets.map((s) =>
-                                    s.id === sheet.id
-                                      ? { ...s, name: currentValue }
-                                      : s
-                                  )
-                                );
-                              }
+                              () => reloadSheets()
                             );
                           },
                           type: "input",

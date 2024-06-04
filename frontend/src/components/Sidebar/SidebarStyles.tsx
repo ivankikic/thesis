@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import { theme } from "../../assets/theme";
+import shouldForwardProp from "@styled-system/should-forward-prop";
 
-export const SidebarContainer = styled.div<{ isOpen: boolean }>`
+export const SidebarContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "isOpen",
+})<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -25,13 +28,17 @@ export const SidebarContentHeader = styled.div`
   padding: 10px 0;
 `;
 
-export const SidebarContentWrapper = styled.div<{ isOpen: boolean }>`
+export const SidebarContentWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "isOpen",
+})<{ isOpen: boolean }>`
   flex: 1;
   opacity: ${(props) => (props.isOpen ? "1" : "0")};
   transition: opacity 0.25s;
 `;
 
-export const SidebarContent = styled.div<{ isOpen: boolean }>`
+export const SidebarContent = styled.div.withConfig({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "isOpen",
+})<{ isOpen: boolean }>`
   flex: 1;
   opacity: ${(props) => (props.isOpen ? "1" : "0")};
   transition: opacity 0.25s;
@@ -72,7 +79,9 @@ export const FixedSection = styled.div`
   padding: 0 10px;
 `;
 
-export const SidebarFooter = styled.div<{ isOpen: boolean }>`
+export const SidebarFooter = styled.div.withConfig({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "isOpen",
+})<{ isOpen: boolean }>`
   opacity: ${(props) => (props.isOpen ? "1" : "0")};
   transition: opacity 0.25s;
   border-top: 1px solid #b6b6b655;
@@ -191,7 +200,9 @@ export const NestedItem = styled.div`
   }
 `;
 
-export const ArrowIcon = styled.img<{ isOpen: boolean; isArrow: boolean }>`
+export const ArrowIcon = styled.img.withConfig({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "isArrow",
+})<{ isOpen: boolean; isArrow: boolean }>`
   width: 13px;
   transform: ${(props) =>
     props.isArrow ? (props.isOpen ? "rotate(90deg)" : "rotate(0deg)") : "none"};

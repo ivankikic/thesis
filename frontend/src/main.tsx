@@ -4,13 +4,16 @@ import App from "./App.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import { ToastProvider } from "./contexts/ToastContext.tsx";
 import "./utils/i18n.ts";
+import { SidebarProvider } from "./contexts/SidebarContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ThemeProvider>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </ThemeProvider>
-  </React.StrictMode>
+  <SidebarProvider>
+    <React.StrictMode>
+      <ThemeProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  </SidebarProvider>
 );

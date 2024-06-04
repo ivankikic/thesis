@@ -1,16 +1,5 @@
 import styled, { css } from "styled-components";
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: 50px;
-`;
-
-export const PageTitle = styled.h1`
-  font-size: 2rem;
-`;
-
 const buttonVariants = {
   primary: css`
     background-color: #002666;
@@ -35,17 +24,43 @@ const buttonVariants = {
   `,
 };
 
-export const CustomButton = styled.button<{
+export const ModalButton = styled.button<{
   variant: "primary" | "secondary" | "error";
 }>`
-  border: none;
+  font-size: 0.8rem;
   padding: 10px 15px;
-  border-radius: 12px;
   line-height: 14px;
-  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   ${({ variant }) => buttonVariants[variant]}
+`;
+
+export const Input = styled.input`
+  width: 230px;
+  padding: 3px 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin: 5px 5px;
+
+  &.missing {
+    outline: none;
+    border-color: #dc3545;
+  }
+
+  &.input-error {
+    border-color: #dc3545;
+    outline: none;
+    border: 1px solid #dc3545;
+  }
+`;
+
+export const ImportColumns = styled.div`
+  display: flex;
+  flex-wrap: wrap;
 `;

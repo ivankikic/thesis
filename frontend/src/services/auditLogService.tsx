@@ -4,7 +4,6 @@ import { getCurrentUser } from "../utils/userUtils";
 
 const createAuditLog = async (auditLog: AuditLogType) => {
   const user = await getCurrentUser();
-  console.log(user);
 
   const data = {
     user_id: user.id,

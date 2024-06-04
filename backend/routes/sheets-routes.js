@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all sheets
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const sheets = await pool.query("SELECT * FROM sheets");
+    const sheets = await pool.query("SELECT * FROM sheets ORDER BY name ASC");
     res.json(sheets.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -164,6 +164,20 @@ router.delete("/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     await pool.query("DELETE FROM sheets WHERE id = $1", [id]);
     res.json({ message: "TOAST_SUCCESS_DELETE_SHEET" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Check if name already exists
+router.post("/check-name", authenticateToken, async (req, res) => {
+  try {
+    const { name } = req.body;
+    const existingSheet = await pool.query(
+      "SELECT * FROM sheets WHERE name = $1",
+      [name]
+    );
+    res.json(existingSheet.rows.length !== 0);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

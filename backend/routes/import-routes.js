@@ -15,11 +15,11 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { fileName, status } = req.body;
+  const { file_name, status, sheet_name } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO file_imports (file_name, status) VALUES ($1, $2) RETURNING *",
-      [fileName, status]
+      "INSERT INTO file_imports (file_name, status, sheet_name) VALUES ($1, $2, $3) RETURNING *",
+      [file_name, status, sheet_name]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

@@ -21,14 +21,19 @@ import { FileType, ImportLog } from "../../utils/types";
 import dayjs from "dayjs";
 import deleteIcon from "/icons/pages/delete_w.svg";
 import ConfirmDeleteImportModal from "../../components/Modal/DeleteImportModal";
+import ImportPreviewModal from "../../components/Modal/ImportPreviewModal";
 import toast from "react-hot-toast";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 const Import = () => {
   const { t } = useTranslation();
-  const [_, setFiles] = useState<FileType[]>([]);
+  const { reloadSheets } = useSidebar();
+  const [file, setFiles] = useState<FileType[]>([]);
   const [importLogs, setImportLogs] = useState<ImportLog[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewData, setPreviewData] = useState<any>(null);
 
   const handleFileChange = (event: any) => {
     const selectedFiles = event.target.files;
@@ -41,38 +46,95 @@ const Import = () => {
           const workbook = XLSX.read(data, { type: "array" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(worksheet);
-          console.log(json); // data for backend
+          const json: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+          });
 
-          const status = "imported";
-          try {
-            const response = await axiosClient.post("/api/import", {
-              fileName: file.name,
-              status: status,
-            });
-            setImportLogs([...importLogs, response.data]);
-          } catch (error) {
-            console.error("Error saving import log:", error);
+          let processedColumnsCount = 0;
+          const expectedColumnCount = json[0].length;
+
+          let columns = json[0].map((col: any) => {
+            processedColumnsCount++;
+            return col === null || col === undefined || col === ""
+              ? "unknown"
+              : col;
+          });
+
+          if (processedColumnsCount < expectedColumnCount) {
+            columns = Array.from({ length: expectedColumnCount }, (_, i) =>
+              columns[i] === undefined ? "unknown" : columns[i]
+            );
           }
+
+          const rows = json
+            .slice(1)
+            .map((row: any[]) => row.map((value: any) => ({ value })));
+
+          setPreviewData({
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            columns,
+            rows,
+          });
+
+          setShowPreviewModal(true);
         } else {
           console.error("File reading failed.");
+          toast.error(t("ERROR_IMPORT"), { duration: 1500 });
         }
       };
       reader.readAsArrayBuffer(file as unknown as Blob);
     });
-    setFiles(acceptedFiles); // file info
+    setFiles(acceptedFiles);
+    event.target.value = null;
+  };
+
+  const handleConfirmImport = async (
+    name: string,
+    columns: string[],
+    rows: any[]
+  ) => {
+    try {
+      await axiosClient.post("/api/sheets", {
+        name,
+        columns: JSON.stringify(columns),
+        rows: JSON.stringify(rows),
+      });
+      await axiosClient.post("/api/import", {
+        file_name: file[0].name,
+        status: "imported",
+        sheet_name: name,
+      });
+      reloadSheets();
+      // toast.success(t("TOAST_SUCCESS_IMPORT"), { duration: 1500 });
+    } catch (error) {
+      await axiosClient.post("/api/import", {
+        file_name: file[0].name,
+        status: "failed",
+      });
+      console.error("Error saving import log:", error);
+      toast.error(t("ERROR_IMPORT"), { duration: 1500 });
+    } finally {
+      setShowPreviewModal(false);
+      resetFileState();
+      fetchImportLogs();
+    }
+  };
+
+  const resetFileState = () => {
+    setFiles([]);
+    setPreviewData(null);
+  };
+
+  const fetchImportLogs = async () => {
+    try {
+      const response = await axiosClient.get("/api/import");
+      setImportLogs(response.data);
+    } catch (error) {
+      console.error("Error fetching import logs:", error);
+    }
   };
 
   useEffect(() => {
-    const fetchImportLogs = async () => {
-      try {
-        const response = await axiosClient.get("/api/import");
-        setImportLogs(response.data);
-      } catch (error) {
-        console.error("Error fetching import logs:", error);
-      }
-    };
-
     fetchImportLogs();
   }, []);
 
@@ -129,6 +191,7 @@ const Import = () => {
                 <TableRow>
                   <TableHeader>{t("ID")}</TableHeader>
                   <TableHeader>{t("FILE_NAME")}</TableHeader>
+                  <TableHeader>{t("SHEET_NAME")}</TableHeader>
                   <TableHeader>{t("STATUS")}</TableHeader>
                   <TableHeader>{t("DATE")}</TableHeader>
                   <TableHeader className="delete-column">
@@ -142,6 +205,8 @@ const Import = () => {
                     <TableRow key={log.id}>
                       <TableCell>{log.id}</TableCell>
                       <TableCell>{log.file_name}</TableCell>
+                      <TableCell>{log.sheet_name}</TableCell>
+
                       <TableCell
                         className={
                           log.status === "imported" ? "imported" : "failed"
@@ -177,6 +242,20 @@ const Import = () => {
         handleClose={() => setShowModal(false)}
         handleConfirm={handleDelete}
       />
+      {previewData && (
+        <ImportPreviewModal
+          show={showPreviewModal}
+          handleClose={() => {
+            setShowPreviewModal(false);
+            resetFileState();
+          }}
+          handleConfirm={handleConfirmImport}
+          initialName={previewData.name}
+          initialColumns={previewData.columns}
+          initialRows={previewData.rows}
+          rowCount={previewData.rows.length}
+        />
+      )}
     </Container>
   );
 };

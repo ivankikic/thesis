@@ -21,6 +21,7 @@ export type Connection = {
 export type ImportLog = {
   id: number;
   file_name: string;
+  sheet_name: string;
   status: string;
   created_at: string;
 };
