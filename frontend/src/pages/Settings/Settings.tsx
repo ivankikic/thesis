@@ -149,11 +149,11 @@ const Settings = () => {
             <Table>
               <thead>
                 <TableRow>
-                  <TableHeader>Id</TableHeader>
-                  <TableHeader>User</TableHeader>
-                  <TableHeader>Date</TableHeader>
-                  <TableHeader>Log Type</TableHeader>
-                  <TableHeader>Data</TableHeader>
+                  <TableHeader>{t("ID")}</TableHeader>
+                  <TableHeader>{t("USER")}</TableHeader>
+                  <TableHeader>{t("DATE")}</TableHeader>
+                  <TableHeader>{t("LOG_TYPE")}</TableHeader>
+                  <TableHeader>{t("DATA")}</TableHeader>
                 </TableRow>
               </thead>
               <tbody>
@@ -161,7 +161,7 @@ const Settings = () => {
                   auditLogs.map((log: AuditLog) => (
                     <TableRow key={log.id}>
                       <TableCell>{log.id}</TableCell>
-                      <TableCell>{log.user_id}</TableCell>
+                      <TableCell>{log.user_email}</TableCell>
                       <TableCell>
                         {dayjs(log.date).format("DD.MM.YYYY HH:mm:ss")}
                       </TableCell>

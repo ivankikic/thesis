@@ -8,7 +8,10 @@ const router = express.Router();
 router.get("/", authenticateToken, async (req, res) => {
   try {
     const auditLogs = await pool.query(
-      "SELECT * FROM audit_logs ORDER BY date DESC"
+      `SELECT audit_logs.*, users.email as user_email 
+       FROM audit_logs 
+       JOIN users ON audit_logs.user_id = users.id 
+       ORDER BY audit_logs.date DESC`
     );
     res.json(auditLogs.rows);
   } catch (error) {
@@ -20,12 +23,15 @@ router.get("/", authenticateToken, async (req, res) => {
 router.get("/filter", authenticateToken, async (req, res) => {
   const { startDate, endDate } = req.query;
   try {
-    let query = "SELECT * FROM audit_logs WHERE 1=1";
+    let query = `SELECT audit_logs.*, users.email as user_email 
+                 FROM audit_logs 
+                 JOIN users ON audit_logs.user_id = users.id 
+                 WHERE 1=1`;
     const params = [];
 
     if (startDate) {
       params.push(startDate);
-      query += ` AND date >= $${params.length}`;
+      query += ` AND audit_logs.date >= $${params.length}`;
     }
 
     if (endDate) {
@@ -33,10 +39,10 @@ router.get("/filter", authenticateToken, async (req, res) => {
         new Date(endDate).setHours(23, 59, 59, 999)
       );
       params.push(endDateWithTime);
-      query += ` AND date <= $${params.length}`;
+      query += ` AND audit_logs.date <= $${params.length}`;
     }
 
-    query += " ORDER BY date DESC";
+    query += " ORDER BY audit_logs.date DESC";
 
     const auditLogs = await pool.query(query, params);
     res.json(auditLogs.rows);

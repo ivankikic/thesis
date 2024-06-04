@@ -17,3 +17,10 @@ export type Connection = {
   status: string;
   sheet_id: number;
 };
+
+export type ImportLog = {
+  id: number;
+  file_name: string;
+  status: string;
+  created_at: string;
+};

@@ -55,6 +55,7 @@ export interface Props {
 export interface AuditLog {
   id: number;
   user_id: number;
+  user_email: string;
   date: Date;
   log_type: string;
   data: any;

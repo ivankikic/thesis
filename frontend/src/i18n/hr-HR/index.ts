@@ -54,6 +54,7 @@ const hrHR = {
   TOAST_SUCCESS_RENAME_SHEET: "Tablica uspješno preimenovana!",
   TOAST_SUCCESS_RENAME_DASHBOARD: "Nadzorna ploča uspješno preimenovana!",
   TOAST_SUCCESS_RENAME_CONNECTION: "Veza uspješno preimenovana!",
+  TOAST_SUCCESS_DELETE_IMPORT: "Datoteka uspješno izbrisana!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -70,6 +71,8 @@ const hrHR = {
   ERROR_EMPTY_CONNECTION_NAME: "Naziv veze ne smije biti prazan",
   ERROR_SOMETHING_WENT_WRONG:
     "Došlo je do neočekivane pogreške! Pokušajte ponovno kasnije",
+  ERROR_DELETE_IMPORT:
+    "Došlo je do neočekivane pogreške prilikom brisanja datoteke!",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -81,6 +84,17 @@ const hrHR = {
   IMPORT_DATA_DESCRIPTION:
     "Uvoz podataka je moguće izvršiti preko CSV fajla. Fajl mora sadržavati podatke u formatu koji se podržavaju u aplikaciji. Podatke uvozite u tablicu klikom na dugme 'Uvoz' na stranici tablice.",
   IMPORT_DATA_BUTTON: "Uvoz",
+  IMPORT_IT: "Uvezi",
+  IMPORT_FILE: "Uvoz datoteke",
+  FILES: "Datoteke",
+  ALLOWED_EXTENSIONS: "Dozvoljene ekstenzije: .csv, .xlsx, .xls",
+  IMPORTED: "Uvezeno", // ??
+  FAILED: "Nije uvezeno", // ??
+  CONFIRM_DELETE_IMPORT: "Jeste li sigurni da želite obrisati datoteku?",
+  ID: "Id",
+  FILE_NAME: "Naziv datoteke",
+  STATUS: "Status",
+  DATE: "Datum",
 
   // SETTINGS
   CONFIRM_LOGOUT: "Jeste li sigurni da se želite odjaviti?",
@@ -91,6 +105,8 @@ const hrHR = {
   TO_DATE: "Do",
   SHOW_LOGS: "Prikaži",
   NO_DATA_AVAILABLE: "Trenutno nema dostupnih podataka",
+  LOG_TYPE: "Tip loga",
+  DATA: "Podaci",
 };
 
 export default hrHR;
