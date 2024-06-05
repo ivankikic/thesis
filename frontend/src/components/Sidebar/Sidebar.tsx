@@ -44,9 +44,7 @@ import {
   duplicateDashboard,
   deleteDashboard,
   renameDashboard,
-  duplicateConnection,
   deleteConnection,
-  renameConnection,
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 import { getCurrentUser } from "../../utils/userUtils";
@@ -89,7 +87,7 @@ const Sidebar = ({
   const [loadingConnections, setLoadingConnections] = useState(false);
 
   const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [loadingAlerts, setLoadingAlerts] = useState(false);
+  const [_, setLoadingAlerts] = useState(false);
 
   useEffect(() => {
     if (sheetsOpen && sheets.length === 0) {
@@ -201,11 +199,6 @@ const Sidebar = ({
   const handleDeleteDashboard = (dashboardId: number) => {
     setDashboardToDelete(dashboardId);
     setShowDeleteDashboardModal(true);
-  };
-
-  const handleDeleteConnection = (connectionId: number) => {
-    setConnectionToDelete(connectionId);
-    setShowDeleteConnectionModal(true);
   };
 
   const confirmDeleteSheet = () => {

@@ -58,8 +58,10 @@ export type Alert = {
 
 export type AlertLog = {
   id: number;
-  alert_id: number;
+  sensor_id: number;
+  column_name: string;
+  limit_value: number;
+  sensor_value: number;
   type: string;
-  value: number;
   created_at: string;
 };

@@ -146,6 +146,16 @@ const hrHR = {
   SAVE_ALERT_LIMITS: "Spremi",
   NO_SENSORS:
     "Nema senzora za koje se mogu postaviti granice upozorenja. Molimo prvo povežite senzor.",
+  SENSOR: "Senzor",
+  ALERT_LOGS: "Logovi upozorenja",
+  COLUMN_NAME: "Naziv stupca",
+  COLUMN_VALUE: "Vrijednost stupca",
+  TIME: "Vrijeme",
+  LIMIT_VALUE: "Postavljena granica",
+  SENSOR_VALUE: "Vrijednost senzora",
+  TYPE: "Vrsta upozorenja",
+  CREATED_AT: "Kreirano",
+  UPDATED_AT: "Ažurirano",
 };
 
 export default hrHR;
