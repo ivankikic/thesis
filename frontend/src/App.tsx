@@ -4,6 +4,7 @@ import { AuthProvider } from "./auth/AuthProvider";
 import { GlobalStyle } from "./assets/global";
 import { Toaster } from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
+import SensorManager from "./services/sensorManager";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <GlobalStyle />
         <Toaster />
         <AppRoutes />
+        <SensorManager />
       </BrowserRouter>
     </AuthProvider>
   );

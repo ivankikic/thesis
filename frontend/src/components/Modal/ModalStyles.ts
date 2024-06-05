@@ -64,3 +64,49 @@ export const ImportColumns = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
+
+export const Select = styled.select`
+  width: 230px;
+  padding: 3px 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin: 5px 5px;
+`;
+
+export const ColumnBar = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  padding-right: 30px;
+  line-height: 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin: 5px 5px;
+  background-color: #f0f0f0;
+`;
+
+export const InfoContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: 30px;
+  line-height: 14px;
+  margin: 15px 0px;
+  gap: 5px;
+  span {
+    font-size: 0.8rem;
+  }
+
+  img {
+    width: 10px;
+    height: 10px;
+  }
+`;
+
+export const Spacer = styled.div`
+  height: 10px;
+`;

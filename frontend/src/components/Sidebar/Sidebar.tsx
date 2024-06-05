@@ -105,7 +105,7 @@ const Sidebar = ({
   useEffect(() => {
     if (connectionsOpen && connections.length === 0) {
       setLoadingConnections(true);
-      axiosClient.get("/api/connections").then((res) => {
+      axiosClient.get("/api/sensors").then((res) => {
         setConnections(res.data);
       });
       setLoadingConnections(false);
@@ -121,6 +121,18 @@ const Sidebar = ({
         console.error("Failed to fetch current user:", error);
       });
   }
+
+  const getAllData = async () => {
+    await axiosClient.get("/api/sheets").then((res) => {
+      setSheets(res.data);
+    });
+    await axiosClient.get("/api/dashboards").then((res) => {
+      setDashboards(res.data);
+    });
+    await axiosClient.get("/api/sensors").then((res) => {
+      setConnections(res.data);
+    });
+  };
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -241,7 +253,10 @@ const Sidebar = ({
           </FixedSection>
           <SidebarContent isOpen={isOpen}>
             <SidebarTitle
-              onClick={() => setSheetsOpen(!sheetsOpen)}
+              onClick={() => {
+                getAllData();
+                setSheetsOpen(!sheetsOpen);
+              }}
               onMouseEnter={() => setHoveredSection("sheets")}
               onMouseLeave={() => setHoveredSection(null)}
               onContextMenu={(e) =>
@@ -329,7 +344,10 @@ const Sidebar = ({
                 ))
               ))}
             <SidebarTitle
-              onClick={() => setDashboardsOpen(!dashboardsOpen)}
+              onClick={() => {
+                getAllData();
+                setDashboardsOpen(!dashboardsOpen);
+              }}
               onMouseEnter={() => setHoveredSection("dashboards")}
               onMouseLeave={() => setHoveredSection(null)}
               onContextMenu={(e) =>
@@ -438,7 +456,10 @@ const Sidebar = ({
                 ))
               ))}
             <SidebarTitle
-              onClick={() => setConnectionsOpen(!connectionsOpen)}
+              onClick={() => {
+                getAllData();
+                setConnectionsOpen(!connectionsOpen);
+              }}
               onMouseEnter={() => setHoveredSection("connections")}
               onMouseLeave={() => setHoveredSection(null)}
               onContextMenu={() => {}}
@@ -453,7 +474,7 @@ const Sidebar = ({
                 }
                 alt="Icon"
               />
-              <span>{t("CONNECTIONS")}</span>
+              <span>{t("SENSORS")}</span>
             </SidebarTitle>
             {connectionsOpen &&
               (loadingConnections ? (

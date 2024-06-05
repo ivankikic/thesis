@@ -1,6 +1,6 @@
 const hrHR = {
   // GENERAL
-  SHEET: "Sheet",
+  SHEET: "Tablica",
   SHEETS: "Tablice",
   DASHBOARD: "Nadzorna ploča",
   DASHBOARDS: "Nadzorne ploče",
@@ -32,6 +32,7 @@ const hrHR = {
   CONFIRMATION: "Potvrda",
   CANCEL: "Odustani",
   CONFIRM: "Potvrdi",
+  ADD: "Dodaj",
   CONFIRM_DELETE_SHEET: "Jeste li sigurni da želite obrisati tablicu?",
   CONFIRM_DELETE_DASHBOARD:
     "Jeste li sigurni da želite obrisati nadzornu ploču?",
@@ -56,6 +57,7 @@ const hrHR = {
   TOAST_SUCCESS_RENAME_CONNECTION: "Veza uspješno preimenovana!",
   TOAST_SUCCESS_DELETE_IMPORT: "Datoteka uspješno izbrisana!",
   TOAST_SUCCESS_IMPORT: "Datoteka je uspješno uvezena!",
+  TOAST_SUCCESS_ADD_SENSOR: "Senzor je uspješno dodan!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -76,6 +78,9 @@ const hrHR = {
     "Došlo je do neočekivane pogreške prilikom brisanja datoteke!",
   ERROR_IMPORT: "Došlo je do neočekivane pogreške prilikom uvoza datoteke!",
   ERROR_NAME_ALREADY_TAKEN: "Tablica s imenom '{{name}}' već postoji",
+  ERROR_ADD_SENSOR:
+    "Došlo je do neočekivane pogreške prilikom dodavanja senzora!",
+  ERROR_NAME_REQUIRED: "Naziv je obavezan",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -118,6 +123,15 @@ const hrHR = {
   NO_DATA_AVAILABLE: "Trenutno nema dostupnih podataka",
   LOG_TYPE: "Tip loga",
   DATA: "Podaci",
+
+  // CONNECT
+  ADD_SENSOR: "Dodaj senzor",
+  SENSORS: "Senzori",
+  LOCATION: "Lokacija",
+  SENSOR_NAME: "Naziv senzora",
+  SENSOR_SOURCE: "Senzor",
+  INFO_COLUMNS: "Unesite nazive stupaca redom kakve Vaš senzor šalje.",
+  COLUMNS_INPUT: "Unos stupaca",
 };
 
 export default hrHR;

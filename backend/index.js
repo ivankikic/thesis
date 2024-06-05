@@ -12,6 +12,8 @@ import settingsRouter from "./routes/settings-routes.js";
 import auditLogsRouter from "./routes/audit-logs-routes.js";
 import importRouter from "./routes/import-routes.js";
 import sensorsRouter from "./routes/sensors-routes.js";
+import sensorSourcesRouter from "./routes/sensor-sources-routes.js";
+import sensorLogsRouter from "./routes/sensor-logs-routes.js";
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ app.use("/api/settings", settingsRouter);
 app.use("/api/audit-logs", auditLogsRouter);
 app.use("/api/import", importRouter);
 app.use("/api/sensors", sensorsRouter);
+app.use("/api/sensor-sources", sensorSourcesRouter);
+app.use("/api/sensor-logs", sensorLogsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

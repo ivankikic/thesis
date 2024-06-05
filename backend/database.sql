@@ -56,9 +56,24 @@ CREATE TABLE file_imports (
 CREATE TABLE sensors (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
+	status VARCHAR(255) NOT NULL,
   rows_counter INTEGER NOT NULL,
-  sheet_id INTEGER NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+	sheet_id INTEGER NOT NULL,
   location VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sensor_sources (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  file_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE sensor_logs (
+  id SERIAL PRIMARY KEY,
+  sensor_id INTEGER NOT NULL,
+  data jsonb NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

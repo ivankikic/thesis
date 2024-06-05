@@ -30,3 +30,20 @@ export type FileType = {
   name: string;
   status: string;
 };
+
+export type Sensor = {
+  id: number;
+  name: string;
+  file_name: string;
+  rows_counter: number;
+  sheet_id: number;
+  location: string;
+  status: string;
+  created_at: string;
+};
+
+export type SensorSource = {
+  id: number;
+  name: string;
+  file_name: string;
+};

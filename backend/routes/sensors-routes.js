@@ -31,11 +31,11 @@ router.get("/:id", authenticateToken, async (req, res) => {
 
 // create a sensor
 router.post("/", authenticateToken, async (req, res) => {
-  const { name, type, location, sheet_id } = req.body;
+  const { name, location, file_name, sheet_id } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO sensors (name, type, location, sheet_id, rows_counter) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [name, type, location, sheet_id, 1]
+      "INSERT INTO sensors (name, status, location, file_name, sheet_id, rows_counter) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [name, "inactive", location, file_name, sheet_id, 1]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -110,5 +110,20 @@ router.put(
     }
   }
 );
+
+// activate a sensor
+router.put("/:id/activate", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      "UPDATE sensors SET status = 'active' WHERE id = $1 RETURNING *",
+      [id]
+    );
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 
 export default router;
