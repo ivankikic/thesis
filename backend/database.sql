@@ -77,6 +77,24 @@ CREATE TABLE sensor_logs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE alert_limits (
+  id SERIAL PRIMARY KEY,
+  sensor_id INTEGER NOT NULL,
+  data jsonb NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE alert_logs (
+  id SERIAL PRIMARY KEY,
+  sensor_id INTEGER NOT NULL,
+  column_name VARCHAR(255) NOT NULL,
+  limit_value INTEGER NOT NULL,
+  sensor_value INTEGER NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 SELECT * FROM users;
 
 INSERT INTO users (name, surname, email, password) VALUES ('Ivan', 'Kikic', 'ivankikic49@gmail.com', 'admin');

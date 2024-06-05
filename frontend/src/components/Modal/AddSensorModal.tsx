@@ -50,7 +50,7 @@ const AddSensorModal: React.FC<AddSensorModalProps> = ({
       setNameError(true);
       return;
     }
-    if (sheets.find((sheet) => sheet.name === sheetName) === undefined) {
+    if (sheets.find((sheet) => sheet.name === sheetName)) {
       setSheetNameError(true);
       return;
     }

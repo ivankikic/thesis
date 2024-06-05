@@ -58,13 +58,16 @@ const Connect = () => {
         columns: JSON.stringify(columns),
       });
       const sheet_id = newSheet.data.id;
-      const response = await axiosClient.post("/api/sensors", {
+      const newSensor = await axiosClient.post("/api/sensors", {
         name,
         file_name,
         location,
         sheet_id,
       });
-      console.log(response);
+      await axiosClient.post("/api/alert-limits", {
+        sensor_id: newSensor.data.id,
+        data: JSON.stringify([]),
+      });
       toast.success(t("TOAST_SUCCESS_ADD_SENSOR"), { duration: 1500 });
     } catch (error) {
       console.error("Error adding sensor:", error);
@@ -144,6 +147,7 @@ const Connect = () => {
           show={openModal}
           handleClose={() => {
             setOpenModal(false);
+            reloadSheets();
           }}
           handleSubmit={handleSubmit}
           sensorSources={sensorSources}

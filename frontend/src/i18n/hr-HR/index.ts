@@ -62,6 +62,7 @@ const hrHR = {
   TOAST_SUCCESS_DELETE_IMPORT: "Datoteka uspješno izbrisana!",
   TOAST_SUCCESS_IMPORT: "Datoteka je uspješno uvezena!",
   TOAST_SUCCESS_ADD_SENSOR: "Senzor je uspješno dodan!",
+  TOAST_SUCCESS_SAVE_ALERT_LIMITS: "Granice upozorenja su uspješno spremljene!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -85,6 +86,8 @@ const hrHR = {
   ERROR_ADD_SENSOR:
     "Došlo je do neočekivane pogreške prilikom dodavanja senzora!",
   ERROR_NAME_REQUIRED: "Naziv je obavezan",
+  ERROR_SAVE_ALERT_LIMITS:
+    "Došlo je do neočekivane pogreške prilikom spremanja granica upozorenja!",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -136,6 +139,13 @@ const hrHR = {
   SENSOR_SOURCE: "Senzor",
   INFO_COLUMNS: "Unesite nazive stupaca redom kakve Vaš senzor šalje.",
   COLUMNS_INPUT: "Unos stupaca",
+
+  // ALERT SYSTEM
+  UPPER_LIMIT: "Gornja granica",
+  LOWER_LIMIT: "Donja granica",
+  SAVE_ALERT_LIMITS: "Spremi",
+  NO_SENSORS:
+    "Nema senzora za koje se mogu postaviti granice upozorenja. Molimo prvo povežite senzor.",
 };
 
 export default hrHR;
