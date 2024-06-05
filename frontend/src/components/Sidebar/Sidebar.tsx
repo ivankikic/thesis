@@ -31,6 +31,9 @@ import ConnectionIcon from "/icons/connection.svg";
 import ConnectionsIcon from "/icons/connections.svg";
 import RightArrowIcon from "/icons/arrow.svg";
 import AlertIcon from "/icons/alert.svg";
+import AlertsIcon from "/icons/alerts.svg";
+import AlertYellowIcon from "/icons/alert_y.svg";
+import ReportIcon from "/icons/report.svg";
 import { useAuthContext } from "../../auth/AuthProvider";
 import {
   addNewSheet,
@@ -49,7 +52,7 @@ import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
 import { getCurrentUser } from "../../utils/userUtils";
 import { useTranslation } from "react-i18next";
 import axiosClient from "../../auth/apiClient";
-import { Connection, Dashboard } from "../../utils/types";
+import { Alert, Connection, Dashboard } from "../../utils/types";
 import useCustomToast from "../../hooks/useCustomToast";
 import ConfirmDeleteSheetModal from "../Modal/DeleteSheetModal";
 import ConfirmDeleteDashboardModal from "../Modal/DeleteDashboardModal";
@@ -65,9 +68,12 @@ const Sidebar = ({
   setIsOpen: (isOpen: boolean) => void;
 }) => {
   const navigate = useNavigate();
+
   const [sheetsOpen, setSheetsOpen] = useState(false);
   const [dashboardsOpen, setDashboardsOpen] = useState(false);
   const [connectionsOpen, setConnectionsOpen] = useState(false);
+  const [alertsOpen, setAlertsOpen] = useState(false);
+
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const { t } = useTranslation();
   const { user, setUser } = useAuthContext();
@@ -81,6 +87,9 @@ const Sidebar = ({
 
   const [connections, setConnections] = useState<Connection[]>([]);
   const [loadingConnections, setLoadingConnections] = useState(false);
+
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [loadingAlerts, setLoadingAlerts] = useState(false);
 
   useEffect(() => {
     if (sheetsOpen && sheets.length === 0) {
@@ -112,6 +121,16 @@ const Sidebar = ({
     }
   }, [connectionsOpen]);
 
+  useEffect(() => {
+    if (alertsOpen && alerts.length === 0) {
+      setLoadingAlerts(true);
+      axiosClient.get("/api/alerts").then((res) => {
+        setAlerts(res.data);
+      });
+      setLoadingAlerts(false);
+    }
+  }, [alertsOpen]);
+
   if (!user) {
     getCurrentUser()
       .then((fetchedUser) => {
@@ -131,6 +150,9 @@ const Sidebar = ({
     });
     await axiosClient.get("/api/sensors").then((res) => {
       setConnections(res.data);
+    });
+    await axiosClient.get("/api/alerts").then((res) => {
+      setAlerts(res.data);
     });
   };
 
@@ -248,6 +270,10 @@ const Sidebar = ({
             <SidebarItem onClick={() => navigate("/alerting-system")}>
               <img src={AlertIcon} alt="Settings icon" />
               <span>{t("ALERT_SYSTEM")}</span>
+            </SidebarItem>
+            <SidebarItem onClick={() => navigate("/reports")}>
+              <img src={ReportIcon} alt="Report icon" />
+              <span>{t("REPORTS")}</span>
             </SidebarItem>
             <SidebarDivider />
           </FixedSection>
@@ -548,6 +574,40 @@ const Sidebar = ({
                   >
                     <img src={ConnectionIcon} alt="Connection icon" />
                     <span>{connection.name}</span>
+                  </NestedItem>
+                ))
+              ))}
+            <SidebarTitle
+              onClick={() => {
+                getAllData();
+                setAlertsOpen(!alertsOpen);
+              }}
+              onMouseEnter={() => setHoveredSection("alerts")}
+              onMouseLeave={() => setHoveredSection(null)}
+              onContextMenu={() => {}}
+            >
+              <ArrowIcon
+                isOpen={alertsOpen}
+                isArrow={hoveredSection === "alerts"}
+                src={hoveredSection === "alerts" ? RightArrowIcon : AlertsIcon}
+                alt="Icon"
+              />
+              <span>{t("ALERTS")}</span>
+            </SidebarTitle>
+            {alertsOpen &&
+              (loadingAlerts ? (
+                <NestedItem>
+                  <span>...</span>
+                </NestedItem>
+              ) : (
+                alerts.map((alert) => (
+                  <NestedItem
+                    key={alert.id}
+                    onClick={() => navigate(`/alert/${alert.id}`)}
+                    onContextMenu={() => {}}
+                  >
+                    <img src={AlertYellowIcon} alt="Alert icon" />
+                    <span>{alert.name}</span>
                   </NestedItem>
                 ))
               ))}

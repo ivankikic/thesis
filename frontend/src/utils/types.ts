@@ -47,3 +47,19 @@ export type SensorSource = {
   name: string;
   file_name: string;
 };
+
+export type Alert = {
+  id: number;
+  name: string;
+  up: number[];
+  down: number[];
+  sensor_id: number;
+};
+
+export type AlertLog = {
+  id: number;
+  alert_id: number;
+  type: string;
+  value: number;
+  created_at: string;
+};

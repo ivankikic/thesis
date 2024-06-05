@@ -6,8 +6,12 @@ const hrHR = {
   DASHBOARDS: "Nadzorne ploče",
   CONNECTION: "Veza",
   CONNECTIONS: "Veze",
+  ALERT: "Upozorenje", // ??
+  ALERTS: "Upozorenja", // ??
   LOGIN: "Prijava",
   LOGOUT: "Odjava",
+  REPORT: "Izvješće",
+  REPORTS: "Izvješća",
   REGISTER: "Registracija",
   PASSWORD: "Lozinka",
   PASSWORD_REQUIRED: "Lozinka je obavezna",
