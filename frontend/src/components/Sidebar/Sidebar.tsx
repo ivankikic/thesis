@@ -512,65 +512,7 @@ const Sidebar = ({
                   <NestedItem
                     key={connection.id}
                     onClick={() => navigate(`/connection/${connection.id}`)}
-                    onContextMenu={(e) =>
-                      handleContextMenu(e, [
-                        {
-                          label: "Rename connection",
-                          onClick: () => {
-                            const currentValue = inputValueRef.current.trim();
-                            if (currentValue === "") {
-                              showToast("error", "ERROR_EMPTY_CONNECTION_NAME");
-                              return;
-                            }
-                            renameConnection(
-                              connection.id,
-                              currentValue,
-                              showToast
-                            ).then(() => {
-                              setConnections((prevConnections) =>
-                                prevConnections.map((c) =>
-                                  c.id === connection.id
-                                    ? { ...c, name: currentValue }
-                                    : c
-                                )
-                              );
-                            });
-                          },
-                          type: "input",
-                          actionType: "rename",
-                          data: connection.name,
-                          onChange: (
-                            e: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            setInputValue(e.target.value);
-                          },
-                        },
-                        { type: "divider" },
-                        {
-                          label: "Duplicate connection",
-                          onClick: () => {
-                            duplicateConnection(
-                              connection.id,
-                              setConnections,
-                              setLoadingConnections,
-                              showToast
-                            );
-                            closeContextMenu();
-                          },
-                          type: "item",
-                          actionType: "duplicate",
-                        },
-                        {
-                          label: "Delete connection",
-                          onClick: () => {
-                            handleDeleteConnection(connection.id);
-                            closeContextMenu();
-                          },
-                          type: "item",
-                          actionType: "delete",
-                        },
-                      ])
-                    }
+                    onContextMenu={() => {}}
                   >
                     <img src={ConnectionIcon} alt="Connection icon" />
                     <span>{connection.name}</span>
@@ -595,12 +537,12 @@ const Sidebar = ({
               <span>{t("ALERTS")}</span>
             </SidebarTitle>
             {alertsOpen &&
-              (loadingAlerts ? (
+              (loadingConnections ? (
                 <NestedItem>
                   <span>...</span>
                 </NestedItem>
               ) : (
-                alerts.map((alert) => (
+                connections.map((alert) => (
                   <NestedItem
                     key={alert.id}
                     onClick={() => navigate(`/alert/${alert.id}`)}

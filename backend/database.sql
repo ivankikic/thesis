@@ -94,6 +94,15 @@ CREATE TABLE alert_logs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE reports (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  interval_type VARCHAR(255) NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  created_by INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 SELECT * FROM users;
 
