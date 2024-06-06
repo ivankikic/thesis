@@ -181,4 +181,34 @@ router.post("/check-name", authenticateToken, async (req, res) => {
   }
 });
 
+// Insert a row of data
+router.post("/:id/insert-row", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { row } = req.body;
+
+    // Fetch the current rows
+    const sheetResult = await pool.query(
+      "SELECT rows FROM sheets WHERE id = $1",
+      [id]
+    );
+    if (sheetResult.rows === null) {
+      return res.status(404).json({ error: "Sheet not found" });
+    }
+
+    const currentRows = sheetResult.rows[0].rows || [];
+    currentRows.push(row.map((cell) => cell)); // Extract values from the row
+
+    // Update the sheet with the new row
+    const updatedSheet = await pool.query(
+      'UPDATE "sheets" SET rows = $1 WHERE id = $2 RETURNING *',
+      [JSON.stringify(currentRows), id] // Convert to JSON string
+    );
+
+    res.json(updatedSheet.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Sensor } from "../utils/types";
 import { parse } from "papaparse";
 import axiosClient from "../auth/apiClient";
+import throttle from "lodash/throttle";
 
 const SensorManager = () => {
   const fetchNextLineFromFile = async (
@@ -12,7 +13,7 @@ const SensorManager = () => {
     const response = await fetch(`/public/files/${fileName}`);
     const csvText = await response.text();
 
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string[]>((resolve, reject) => {
       parse(csvText, {
         complete: async (results: any) => {
           if (rowsCounter < results.data.length) {
@@ -36,7 +37,10 @@ const SensorManager = () => {
   };
 
   const sendSensorData = async (sheetId: number, data: any) => {
-    const response = await axiosClient.get(`/api/sheets/${sheetId}`);
+    const response = await axiosClient.post(
+      `/api/sheets/${sheetId}/insert-row`,
+      data
+    );
     return response.data;
   };
 
@@ -48,14 +52,21 @@ const SensorManager = () => {
         const sensors = response.data;
 
         sensors.forEach(async (sensor: Sensor) => {
-          console.log(sensor);
           if (sensor.status === "active") {
             const data = await fetchNextLineFromFile(
               sensor.id,
               sensor.file_name,
               sensor.rows_counter
             );
-            await sendSensorData(sensor.sheet_id, data);
+
+            const result: any[] = [];
+            data.forEach((data: any) => {
+              result.push({ value: data });
+            });
+            const row = {
+              row: result,
+            };
+            await sendSensorData(sensor.sheet_id, row);
           }
         });
       } catch (error) {
@@ -63,7 +74,14 @@ const SensorManager = () => {
       }
     };
 
-    const intervalId = setInterval(fetchAndProcessSensors, 60000); // 60000 ms = 1 minute
+    const throttledFetchAndProcessSensors = throttle(
+      fetchAndProcessSensors,
+      60000
+    );
+
+    const intervalId = setInterval(() => {
+      throttledFetchAndProcessSensors();
+    }, 60000); // 60000 ms = 1 minute
 
     fetchAndProcessSensors();
 

@@ -156,6 +156,10 @@ const hrHR = {
   TYPE: "Vrsta upozorenja",
   CREATED_AT: "Kreirano",
   UPDATED_AT: "Ažurirano",
+
+  // CONNECTION
+  MANAGE_SENSOR: "Upravljaj senzorom",
+  SENSOR_LOGS: "Logovi senzora",
 };
 
 export default hrHR;

@@ -64,7 +64,7 @@ const Alert = () => {
   return (
     <Container>
       <PageHeader>
-        <PageTitle>{t("ALERT")}</PageTitle>
+        <PageTitle>{t("ALERTS")}</PageTitle>
       </PageHeader>
       <PageContent>
         <PageContentSection>

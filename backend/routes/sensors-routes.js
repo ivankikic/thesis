@@ -111,13 +111,20 @@ router.put(
   }
 );
 
-// activate a sensor
-router.put("/:id/activate", authenticateToken, async (req, res) => {
+// toggle sensor status
+router.put("/:id/toggle", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query(
-      "UPDATE sensors SET status = 'active' WHERE id = $1 RETURNING *",
+    const currentStatusResult = await pool.query(
+      "SELECT status FROM sensors WHERE id = $1",
       [id]
+    );
+    const currentStatus = currentStatusResult.rows[0].status;
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+
+    const result = await pool.query(
+      "UPDATE sensors SET status = $2 WHERE id = $1 RETURNING *",
+      [id, newStatus]
     );
     res.status(200).json(result.rows[0]);
   } catch (err) {
