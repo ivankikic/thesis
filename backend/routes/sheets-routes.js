@@ -211,4 +211,22 @@ router.post("/:id/insert-row", authenticateToken, async (req, res) => {
   }
 });
 
+// Update rows
+router.put("/:id/rows", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rows } = req.body;
+
+    const rowsJson = JSON.stringify(rows);
+
+    const sheet = await pool.query(
+      'UPDATE "sheets" SET rows = $1 WHERE id = $2 RETURNING *',
+      [rowsJson, id]
+    );
+    res.json(sheet.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

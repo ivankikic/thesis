@@ -27,7 +27,7 @@ const Connection = () => {
     setSensor(response.data);
   };
 
-  const handleSwitchChange = async (checked: boolean) => {
+  const handleSwitchChange = async () => {
     try {
       const response = await axiosClient.put(`/api/sensors/${id}/toggle`);
       setSensor(response.data);
