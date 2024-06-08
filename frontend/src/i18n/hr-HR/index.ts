@@ -166,6 +166,10 @@ const hrHR = {
 
   // DASHBOARD
   EDIT_COLUMNS: "Uređivanje stupaca",
+  SELECT_SHEET: "Izaberite tablicu",
+  SEARCH_SHEET: "Pretraga tablice",
+  DASHBOARD_TILE_NAME: "Naziv kartice nadzorne ploče",
+  ADD_TILE: "Dodaj karticu",
 };
 
 export default hrHR;

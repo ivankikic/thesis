@@ -268,4 +268,57 @@ router.put("/:id/type", authenticateToken, async (req, res) => {
   }
 });
 
+// Create a dashboard tile
+router.post("/:id/tiles", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, sheet_id } = req.body;
+
+    const dashboard = await pool.query(
+      "SELECT * FROM dashboards WHERE id = $1",
+      [id]
+    );
+    if (dashboard.rows.length === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    const sheet = await pool.query("SELECT * FROM sheets WHERE id = $1", [
+      sheet_id,
+    ]);
+    if (sheet.rows.length === 0) {
+      return res.status(404).json({ error: "Sheet not found" });
+    }
+
+    const filteredColumns = sheet.rows[0].columns.filter(
+      (col) => col.toLowerCase() !== "date" && col.toLowerCase() !== "datetime"
+    );
+
+    const included_columns = filteredColumns.slice(0, 2);
+    const order = dashboard.rows[0].data.length + 1;
+
+    const newTile = {
+      id: Date.now(),
+      name,
+      sheet_id,
+      dashboard_data: {
+        order,
+        chart_type: "bar",
+        dashboard_type: "1:2",
+        included_columns,
+      },
+    };
+
+    const updatedData = [...dashboard.rows[0].data, newTile];
+
+    const updatedDashboard = await pool.query(
+      'UPDATE "dashboards" SET data = $1 WHERE id = $2 RETURNING *',
+      [JSON.stringify(updatedData), id]
+    );
+
+    res.json(updatedDashboard.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

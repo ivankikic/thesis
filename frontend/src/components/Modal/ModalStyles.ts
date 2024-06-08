@@ -60,6 +60,45 @@ export const Input = styled.input`
   }
 `;
 
+export const CustomSelectContainer = styled.div`
+  position: relative;
+  width: 230px;
+`;
+
+export const CustomSelectInput = styled.input`
+  width: 100%;
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin: 5px 0;
+`;
+
+export const CustomSelectDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+`;
+
+export const CustomSelectOption = styled.div`
+  padding: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+export const Spacer = styled.div`
+  height: 10px;
+`;
+
 export const ImportColumns = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -105,10 +144,6 @@ export const InfoContent = styled.div`
     width: 10px;
     height: 10px;
   }
-`;
-
-export const Spacer = styled.div`
-  height: 10px;
 `;
 
 export const ColumnButtonContainer = styled.div`

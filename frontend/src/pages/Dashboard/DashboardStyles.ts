@@ -49,3 +49,16 @@ export const DashboardContainer = styled.div<{ size: "1:1" | "1:2" | "1:3" }>`
   grid-column: ${({ size }) =>
     size === "1:1" ? "span 3" : size === "1:2" ? "span 1 / span 2" : "span 1"};
 `;
+
+export const AddDashboardButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  &:hover {
+    background-color: #45a049;
+  }
+`;

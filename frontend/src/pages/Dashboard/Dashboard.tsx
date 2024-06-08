@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Container, PageTitle } from "../PagesStyles";
+import { Container, CustomButton, PageTitle } from "../PagesStyles";
 import {
   DashboardContainer,
   DashboardsContainer,
@@ -32,6 +32,8 @@ import useCustomToast from "../../hooks/useCustomToast";
 import DeleteIcon from "/icons/contextMenu/delete.svg";
 import EditIcon from "/icons/contextMenu/edit.svg";
 import EditColumnsModal from "../../components/Modal/EditColumnsModal";
+import AddDashboardTileModal from "../../components/Modal/AddDashboardTile";
+import { useTranslation } from "react-i18next";
 
 const COLORS = [
   "#8884d8",
@@ -61,9 +63,11 @@ const Dashboard = () => {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
+  const [isTileModalOpen, setIsTileModalOpen] = useState(false);
   const { id } = useParams();
   const showToast = useCustomToast();
   const inputValueRef = useRef("");
+  const { t } = useTranslation();
 
   const fetchDashboard = async () => {
     const response = await axiosClient.get(`/api/dashboards/${id}`);
@@ -209,10 +213,31 @@ const Dashboard = () => {
     return 3;
   };
 
+  const handleAddTile = async (name: string, sheet_id: number | null) => {
+    if (!sheet_id) return;
+    try {
+      const response = await axiosClient.post(`/api/dashboards/${id}/tiles`, {
+        name,
+        sheet_id,
+      });
+      setDashboard(response.data);
+      showToast("success", "Tile added successfully");
+    } catch (error) {
+      showToast("error", "Error adding tile");
+    }
+    setIsTileModalOpen(false);
+  };
+
   return (
     <Container>
       <PageHeader>
         <PageTitle>{dashboard?.name}</PageTitle>
+        <CustomButton
+          variant="primary"
+          onClick={() => setIsTileModalOpen(true)}
+        >
+          {t("ADD_TILE")}
+        </CustomButton>
       </PageHeader>
       <PageContent>
         <PageContentSection>
@@ -308,22 +333,10 @@ const Dashboard = () => {
             },
             { type: "divider" },
             {
-              label: "1:1",
-              onClick: () => handleUpdateDashboardType("1:1"),
-              type: "item",
-              actionType: "updateType",
-            },
-            {
-              label: "1:2",
-              onClick: () => handleUpdateDashboardType("1:2"),
-              type: "item",
-              actionType: "updateType",
-            },
-            {
-              label: "1:3",
-              onClick: () => handleUpdateDashboardType("1:3"),
-              type: "item",
-              actionType: "updateType",
+              type: "custom",
+              options: ["1:1", "1:2", "1:3"],
+              activeOption: selectedItem?.dashboard_data.dashboard_type,
+              onClick: (type: string) => handleUpdateDashboardType(type),
             },
             { type: "divider" },
             {
@@ -365,6 +378,11 @@ const Dashboard = () => {
           }}
         />
       )}
+      <AddDashboardTileModal
+        show={isTileModalOpen}
+        handleClose={() => setIsTileModalOpen(false)}
+        handleSubmit={handleAddTile}
+      />
     </Container>
   );
 };

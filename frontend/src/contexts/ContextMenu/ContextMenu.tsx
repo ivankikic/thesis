@@ -33,11 +33,13 @@ interface ContextMenuProps {
   position: { x: number; y: number };
   label?: string;
   data?: string;
-  onClick?: () => void;
+  onClick?: (type?: string) => void;
   placeholder?: string;
   actionType?: IconType;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
+  options?: string[]; // Added this line
+  activeOption?: string; // Added this line
 }
 
 const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
@@ -120,9 +122,48 @@ const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
                 )}
               </MenuDropdown>
             );
+          case "custom":
+            return (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
+              >
+                {item.options?.map((option: string) => (
+                  <button
+                    key={option}
+                    onClick={() => {
+                      if (item.onClick) {
+                        item.onClick(option);
+                      }
+                      onClose();
+                    }}
+                    style={{
+                      backgroundColor:
+                        item.activeOption === option
+                          ? "#002666"
+                          : "transparent",
+                      color: item.activeOption === option ? "white" : "black",
+                      border: "none",
+                      padding: "5px 10px",
+                      cursor: "pointer",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            );
           default:
             return (
-              <MenuItem key={index} onClick={item.onClick}>
+              <MenuItem
+                key={index}
+                onClick={() => item.onClick && item.onClick()}
+              >
                 {item.actionType && (
                   <MenuIcon
                     src={iconMap[item.actionType]}
