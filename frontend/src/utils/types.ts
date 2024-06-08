@@ -5,10 +5,27 @@ export type Sheet = {
   columns: any[];
 };
 
+// export type Dashboard = {
+//   id: number;
+//   name: string;
+//   data: JSON;
+// };
+
+export type DashboardData = {
+  id: number;
+  name: string;
+  sheet_id: number;
+  dashboard_data: {
+    dashboard_type: "1:1" | "1:2";
+    order: number;
+    included_columns: string[];
+  };
+};
+
 export type Dashboard = {
   id: number;
   name: string;
-  data: JSON;
+  data: DashboardData[];
 };
 
 export type Connection = {

@@ -15,12 +15,12 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 // Get a dashboard
-router.get("/:name", authenticateToken, async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
-    const { name } = req.params;
+    const { id } = req.params;
     const dashboard = await pool.query(
-      "SELECT * FROM dashboards WHERE name = $1",
-      [name]
+      "SELECT * FROM dashboards WHERE id = $1",
+      [id]
     );
     res.json(dashboard.rows[0]);
   } catch (error) {
@@ -170,6 +170,61 @@ router.delete("/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     await pool.query("DELETE FROM dashboards WHERE id = $1", [id]);
     res.json({ message: "TOAST_SUCCESS_DELETE_DASHBOARD" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update dashboard order
+router.put("/:id/order", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data } = req.body;
+
+    const updatedDashboard = await pool.query(
+      'UPDATE "dashboards" SET data = $1 WHERE id = $2 RETURNING *',
+      [data, id]
+    );
+
+    res.json(updatedDashboard.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update included columns for a dashboard item
+router.put("/:id/columns", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { itemId, includedColumns } = req.body;
+
+    const dashboard = await pool.query(
+      "SELECT * FROM dashboards WHERE id = $1",
+      [id]
+    );
+
+    if (dashboard.rows.length === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    const updatedData = dashboard.rows[0].data.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            dashboard_data: {
+              ...item.dashboard_data,
+              included_columns: includedColumns,
+            },
+          }
+        : item
+    );
+
+    const updatedDashboard = await pool.query(
+      'UPDATE "dashboards" SET data = $1 WHERE id = $2 RETURNING *',
+      [JSON.stringify(updatedData), id]
+    );
+
+    res.json(updatedDashboard.rows[0]);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

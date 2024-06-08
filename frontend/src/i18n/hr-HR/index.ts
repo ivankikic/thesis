@@ -63,6 +63,8 @@ const hrHR = {
   TOAST_SUCCESS_IMPORT: "Datoteka je uspješno uvezena!",
   TOAST_SUCCESS_ADD_SENSOR: "Senzor je uspješno dodan!",
   TOAST_SUCCESS_SAVE_ALERT_LIMITS: "Granice upozorenja su uspješno spremljene!",
+  TOAST_SUCCESS_EDIT_COLUMNS: "Stupci su uspješno ažurirani!",
+  TOAST_SUCCESS_RENAME_ITEM: "Stupci su uspješno preimenovani!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -160,6 +162,9 @@ const hrHR = {
   // CONNECTION
   MANAGE_SENSOR: "Upravljaj senzorom",
   SENSOR_LOGS: "Logovi senzora",
+
+  // DASHBOARD
+  EDIT_COLUMNS: "Uređivanje stupaca",
 };
 
 export default hrHR;

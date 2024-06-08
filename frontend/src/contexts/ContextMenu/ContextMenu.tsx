@@ -14,6 +14,7 @@ import DuplicateIcon from "/icons/contextMenu/duplicate.svg";
 import DeleteIcon from "/icons/contextMenu/delete.svg";
 import AddDashboardIcon from "/icons/contextMenu/add_dashboard.svg";
 import AddConnectionIcon from "/icons/contextMenu/add_connection.svg";
+import EditIcon from "/icons/contextMenu/edit.svg";
 
 const iconMap = {
   add_sheet: AddSheetIcon,
@@ -21,6 +22,7 @@ const iconMap = {
   delete: DeleteIcon,
   add_dashboard: AddDashboardIcon,
   add_connection: AddConnectionIcon,
+  edit: EditIcon,
 };
 
 type IconType = keyof typeof iconMap;

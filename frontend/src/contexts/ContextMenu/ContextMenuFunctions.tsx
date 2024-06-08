@@ -329,3 +329,77 @@ export const renameConnection = (
       throw error;
     });
 };
+
+export const deleteDashboardItem = async (
+  dashboardId: number,
+  itemId: number,
+  setDashboard: (dashboard: Dashboard) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  try {
+    const response = await axiosClient.get(`/api/dashboards/${dashboardId}`);
+    const updatedData = response.data.data.filter(
+      (item: any) => item.id !== itemId
+    );
+    const updatedDashboard = { ...response.data, data: updatedData };
+    setDashboard(updatedDashboard);
+
+    await axiosClient.put(`/api/dashboards/${dashboardId}/order`, {
+      data: JSON.stringify(updatedDashboard.data),
+    });
+
+    showToast("success", "Item deleted successfully");
+  } catch (error) {
+    showToast("error", "Error deleting item");
+    console.error("Error deleting dashboard item:", error);
+  }
+};
+
+export const renameDashboardItem = async (
+  dashboardId: number,
+  itemId: number,
+  newName: string,
+  setDashboard: (dashboard: Dashboard) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  try {
+    const response = await axiosClient.get(`/api/dashboards/${dashboardId}`);
+    const updatedData = response.data.data.map((item: any) =>
+      item.id === itemId ? { ...item, name: newName } : item
+    );
+    const updatedDashboard = { ...response.data, data: updatedData };
+    setDashboard(updatedDashboard);
+
+    await axiosClient.put(`/api/dashboards/${dashboardId}/order`, {
+      data: JSON.stringify(updatedDashboard.data),
+    });
+
+    showToast("success", "TOAST_SUCCESS_RENAME_ITEM");
+  } catch (error) {
+    showToast("error", "Error renaming item");
+    console.error("Error renaming dashboard item:", error);
+  }
+};
+
+export const editColumns = async (
+  dashboardId: number,
+  itemId: number,
+  includedColumns: string[],
+  setDashboard: (dashboard: Dashboard) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  try {
+    const response = await axiosClient.put(
+      `/api/dashboards/${dashboardId}/columns`,
+      {
+        itemId,
+        includedColumns,
+      }
+    );
+    setDashboard(response.data);
+    showToast("success", "TOAST_SUCCESS_EDIT_COLUMNS");
+  } catch (error) {
+    showToast("error", "Error updating columns");
+    console.error("Error updating columns:", error);
+  }
+};

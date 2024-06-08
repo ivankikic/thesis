@@ -110,3 +110,26 @@ export const InfoContent = styled.div`
 export const Spacer = styled.div`
   height: 10px;
 `;
+
+export const ColumnButtonContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+`;
+
+export const ColumnButton = styled.div<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: ${({ selected }) => (selected ? "#007bff" : "#f0f0f0")};
+  color: ${({ selected }) => (selected ? "#fff" : "#000")};
+
+  &:hover {
+    background-color: ${({ selected }) => (selected ? "#0056b3" : "#e0e0e0")};
+  }
+`;

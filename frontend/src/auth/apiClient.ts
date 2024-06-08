@@ -28,7 +28,7 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 403) {
-      window.location.href = "/login";
+      AuthService.logoutUser();
     }
     return Promise.reject(error);
   }

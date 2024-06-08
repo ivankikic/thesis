@@ -37,6 +37,7 @@
     "react-spreadsheet": "^0.9.4",
     "react-switch": "^7.0.0",
     "react-toastify": "^10.0.5",
+    "recharts": "^2.12.7",
     "scheduler": "^0.23.2",
     "styled-components": "^6.1.11",
     "throttle": "^1.0.3",
