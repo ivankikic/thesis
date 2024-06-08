@@ -65,6 +65,7 @@ const hrHR = {
   TOAST_SUCCESS_SAVE_ALERT_LIMITS: "Granice upozorenja su uspješno spremljene!",
   TOAST_SUCCESS_EDIT_COLUMNS: "Stupci su uspješno ažurirani!",
   TOAST_SUCCESS_RENAME_ITEM: "Stupci su uspješno preimenovani!",
+  TOAST_SUCCESS_UPDATE_DASHBOARD_TYPE: "Tip nadzorne ploče uspješno ažuriran!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",

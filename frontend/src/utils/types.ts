@@ -16,7 +16,7 @@ export type DashboardData = {
   name: string;
   sheet_id: number;
   dashboard_data: {
-    dashboard_type: "1:1" | "1:2";
+    dashboard_type: "1:1" | "1:2" | "1:3";
     order: number;
     included_columns: string[];
   };

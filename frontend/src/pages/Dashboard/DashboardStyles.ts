@@ -29,22 +29,23 @@ export const PageContentTitle = styled.span`
   font-weight: 600;
 `;
 
-export const DashboardsContainer = styled.div`
+export const DashboardsContainer = styled.div<{ columns: number }>`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: ${({ columns }) => `repeat(${columns}, 1fr)`};
   gap: 20px;
   width: 100%;
 `;
 
-export const DashboardContainer = styled.div<{ size: "1:1" | "1:2" }>`
+export const DashboardContainer = styled.div<{ size: "1:1" | "1:2" | "1:3" }>`
   display: flex;
   flex-direction: column;
   gap: 20px;
   border: 1px solid #d3d3d3;
   padding: 20px;
   border-radius: 10px;
-  grid-column: ${({ size }) => (size === "1:1" ? "span 2" : "span 1")};
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   user-select: none;
+  grid-column: ${({ size }) =>
+    size === "1:1" ? "span 3" : size === "1:2" ? "span 1 / span 2" : "span 1"};
 `;

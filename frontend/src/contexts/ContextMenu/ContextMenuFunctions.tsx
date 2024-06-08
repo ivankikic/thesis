@@ -403,3 +403,25 @@ export const editColumns = async (
     console.error("Error updating columns:", error);
   }
 };
+
+export const updateDashboardType = async (
+  dashboardId: number,
+  itemId: number,
+  dashboardType: string,
+  setDashboard: (dashboard: Dashboard) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  try {
+    const response = await axiosClient.put(
+      `/api/dashboards/${dashboardId}/type`,
+      {
+        itemId,
+        dashboardType,
+      }
+    );
+    setDashboard(response.data);
+  } catch (error) {
+    showToast("error", "Error updating dashboard type");
+    console.error("Error updating dashboard type:", error);
+  }
+};

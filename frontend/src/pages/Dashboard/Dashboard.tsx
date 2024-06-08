@@ -26,6 +26,7 @@ import {
   deleteDashboardItem,
   renameDashboardItem,
   editColumns,
+  updateDashboardType,
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import useCustomToast from "../../hooks/useCustomToast";
 import DeleteIcon from "/icons/contextMenu/delete.svg";
@@ -186,6 +187,28 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
+  const handleUpdateDashboardType = async (type: string) => {
+    if (!selectedItem) return;
+    await updateDashboardType(
+      Number(id),
+      selectedItem.id,
+      type,
+      setDashboard,
+      showToast
+    );
+    setContextMenu(null);
+  };
+
+  const getGridColumns = () => {
+    const types = dashboard?.data.map(
+      (item) => item.dashboard_data.dashboard_type
+    );
+    console.log(types?.includes("1:2"));
+    if (types?.includes("1:1")) return 1;
+    if (types?.includes("1:2")) return 2;
+    return 3;
+  };
+
   return (
     <Container>
       <PageHeader>
@@ -200,6 +223,7 @@ const Dashboard = () => {
             >
               {(provided) => (
                 <DashboardsContainer
+                  columns={getGridColumns()}
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -281,6 +305,25 @@ const Dashboard = () => {
               onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                 inputValueRef.current = e.target.value;
               },
+            },
+            { type: "divider" },
+            {
+              label: "1:1",
+              onClick: () => handleUpdateDashboardType("1:1"),
+              type: "item",
+              actionType: "updateType",
+            },
+            {
+              label: "1:2",
+              onClick: () => handleUpdateDashboardType("1:2"),
+              type: "item",
+              actionType: "updateType",
+            },
+            {
+              label: "1:3",
+              onClick: () => handleUpdateDashboardType("1:3"),
+              type: "item",
+              actionType: "updateType",
             },
             { type: "divider" },
             {
