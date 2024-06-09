@@ -12,13 +12,18 @@ import type { Dashboard as DashboardType, Sheet } from "../../utils/types";
 import { useParams } from "react-router-dom";
 import {
   BarChart,
+  LineChart,
+  PieChart,
   Bar,
+  Line,
+  Pie,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import ContextMenu from "../../contexts/ContextMenu/ContextMenu";
@@ -27,6 +32,7 @@ import {
   renameDashboardItem,
   editColumns,
   updateDashboardType,
+  updateChartType,
 } from "../../contexts/ContextMenu/ContextMenuFunctions";
 import useCustomToast from "../../hooks/useCustomToast";
 import DeleteIcon from "/icons/contextMenu/delete.svg";
@@ -93,6 +99,7 @@ const Dashboard = () => {
           formattedRow[columns[index]] = cell.value;
         }
       });
+      formattedRow["Date"] = new Date(row[0].value).toLocaleDateString();
       return formattedRow;
     });
   };
@@ -114,6 +121,24 @@ const Dashboard = () => {
     return { min, max };
   };
 
+  const calculateAverages = (data: any) => {
+    const averages: { [key: string]: { value: number; count: number } } = {};
+    data.forEach((item: any) => {
+      Object.keys(item).forEach((key: string) => {
+        if (!averages[key]) {
+          averages[key] = { value: 0, count: 0 };
+        }
+        averages[key].value += Number(item[key]);
+        averages[key].count++;
+      });
+    });
+
+    return Object.keys(averages).map((key: string) => ({
+      name: key,
+      value: averages[key].value / averages[key].count,
+    }));
+  };
+
   const onDragEnd = async (result: any) => {
     if (!result.destination) return;
 
@@ -124,10 +149,6 @@ const Dashboard = () => {
     const updatedDashboard = { ...dashboard, data: items } as DashboardType;
     setDashboard(updatedDashboard);
 
-    // Log the data to inspect its structure
-    console.log("Updated dashboard data:", updatedDashboard.data);
-
-    // Update order on the backend
     try {
       await axiosClient.put(`/api/dashboards/${id}/order`, {
         data: JSON.stringify(updatedDashboard.data),
@@ -203,14 +224,38 @@ const Dashboard = () => {
     setContextMenu(null);
   };
 
+  const handleUpdateChartType = async (type: string) => {
+    if (!selectedItem) return;
+    await updateChartType(
+      Number(id),
+      selectedItem.id,
+      type,
+      setDashboard,
+      showToast
+    );
+    setContextMenu(null);
+  };
+
   const getGridColumns = () => {
     const types = dashboard?.data.map(
       (item) => item.dashboard_data.dashboard_type
     );
-    console.log(types?.includes("1:2"));
     if (types?.includes("1:1")) return 1;
     if (types?.includes("1:2")) return 2;
     return 3;
+  };
+
+  const getXAxisInterval = (dashboardType: string) => {
+    switch (dashboardType) {
+      case "1:1":
+        return 10;
+      case "1:2":
+        return 16;
+      case "1:3":
+        return 30;
+      default:
+        return 0;
+    }
   };
 
   const handleAddTile = async (name: string, sheet_id: number | null) => {
@@ -221,9 +266,9 @@ const Dashboard = () => {
         sheet_id,
       });
       setDashboard(response.data);
-      showToast("success", "Tile added successfully");
+      showToast("success", "TOAST_SUCCESS_TILE_ADDED");
     } catch (error) {
-      showToast("error", "Error adding tile");
+      showToast("error", "TOAST_ERROR_TILE_ADDED");
     }
     setIsTileModalOpen(false);
   };
@@ -252,65 +297,157 @@ const Dashboard = () => {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  {dashboard?.data?.map((item, index) => {
-                    const sheet = sheets?.find(
-                      (sheet) => sheet.id === item.sheet_id
-                    );
-                    const chartData = sheet
-                      ? formatChartData(
-                          sheet,
-                          item.dashboard_data.included_columns
-                        )
-                      : [];
+                  {dashboard?.data ? (
+                    dashboard?.data?.map((item, index) => {
+                      const sheet = sheets?.find(
+                        (sheet) => sheet.id === item.sheet_id
+                      );
+                      const chartData = sheet
+                        ? formatChartData(
+                            sheet,
+                            item.dashboard_data.included_columns
+                          )
+                        : [];
+                      const { min, max } = getMinMaxValues(
+                        chartData,
+                        item.dashboard_data.included_columns
+                      );
+                      const pieData = calculateAverages(chartData);
 
-                    const { min, max } = getMinMaxValues(
-                      chartData,
-                      item.dashboard_data.included_columns
-                    );
-
-                    return (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id.toString()}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <DashboardContainer
-                            size={item.dashboard_data.dashboard_type}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            onContextMenu={(e) => handleContextMenu(e, item)}
-                          >
-                            <span>{item.name}</span>
-                            {chartData.length > 0 && (
-                              <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={chartData}>
-                                  <CartesianGrid strokeDasharray="3 3" />
-                                  <XAxis dataKey="Date" />
-                                  <YAxis
-                                    domain={[min, max]}
-                                    tickFormatter={(value) => value.toFixed(2)}
-                                  />
-                                  <Tooltip />
-                                  <Legend />
-                                  {item.dashboard_data.included_columns.map(
-                                    (col, idx) => (
-                                      <Bar
-                                        key={col}
-                                        dataKey={col}
-                                        fill={COLORS[idx % COLORS.length]}
-                                      />
-                                    )
+                      return (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id.toString()}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <DashboardContainer
+                              size={item.dashboard_data.dashboard_type}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              onContextMenu={(e) => handleContextMenu(e, item)}
+                            >
+                              <span>{item.name}</span>
+                              {chartData.length > 0 && (
+                                <>
+                                  {item.dashboard_data.chart_type === "bar" && (
+                                    <ResponsiveContainer
+                                      width="100%"
+                                      height={300}
+                                    >
+                                      <BarChart data={chartData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                          dataKey="Date"
+                                          tickFormatter={(date) =>
+                                            new Date(date).toLocaleDateString()
+                                          }
+                                          tick={{ fontSize: 14 }}
+                                          interval={getXAxisInterval(
+                                            item.dashboard_data.dashboard_type
+                                          )}
+                                        />
+                                        <YAxis
+                                          domain={[min, max]}
+                                          tickFormatter={(value) =>
+                                            value.toFixed(2)
+                                          }
+                                        />
+                                        <Tooltip />
+                                        <Legend />
+                                        {item.dashboard_data.included_columns.map(
+                                          (col, idx) => (
+                                            <Bar
+                                              key={col}
+                                              dataKey={col}
+                                              fill={COLORS[idx % COLORS.length]}
+                                            />
+                                          )
+                                        )}
+                                      </BarChart>
+                                    </ResponsiveContainer>
                                   )}
-                                </BarChart>
-                              </ResponsiveContainer>
-                            )}
-                          </DashboardContainer>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                                  {item.dashboard_data.chart_type ===
+                                    "line" && (
+                                    <ResponsiveContainer
+                                      width="100%"
+                                      height={300}
+                                    >
+                                      <LineChart data={chartData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                          dataKey="Date"
+                                          tickFormatter={(date) =>
+                                            new Date(date).toLocaleDateString()
+                                          }
+                                          tick={{ fontSize: 14 }}
+                                          interval={getXAxisInterval(
+                                            item.dashboard_data.dashboard_type
+                                          )}
+                                        />
+                                        <YAxis
+                                          domain={[min, max]}
+                                          tickFormatter={(value) =>
+                                            value.toFixed(2)
+                                          }
+                                        />
+                                        <Tooltip />
+                                        <Legend />
+                                        {item.dashboard_data.included_columns.map(
+                                          (col, idx) => (
+                                            <Line
+                                              key={col}
+                                              type="monotone"
+                                              dataKey={col}
+                                              stroke={
+                                                COLORS[idx % COLORS.length]
+                                              }
+                                            />
+                                          )
+                                        )}
+                                      </LineChart>
+                                    </ResponsiveContainer>
+                                  )}
+                                  {item.dashboard_data.chart_type === "pie" && (
+                                    <ResponsiveContainer
+                                      width="100%"
+                                      height={300}
+                                    >
+                                      <PieChart>
+                                        <Pie
+                                          data={pieData}
+                                          dataKey="value"
+                                          nameKey="name"
+                                          cx="50%"
+                                          cy="50%"
+                                          outerRadius={100}
+                                          label
+                                        >
+                                          {pieData.map((_, index) => (
+                                            <Cell
+                                              key={`cell-${index}`}
+                                              fill={
+                                                COLORS[index % COLORS.length]
+                                              }
+                                            />
+                                          ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend />
+                                      </PieChart>
+                                    </ResponsiveContainer>
+                                  )}
+                                </>
+                              )}
+                            </DashboardContainer>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <div>No data</div>
+                  )}
                   {provided.placeholder}
                 </DashboardsContainer>
               )}
@@ -333,10 +470,17 @@ const Dashboard = () => {
             },
             { type: "divider" },
             {
-              type: "custom",
+              type: "customColumnType",
               options: ["1:1", "1:2", "1:3"],
               activeOption: selectedItem?.dashboard_data.dashboard_type,
               onClick: (type: string) => handleUpdateDashboardType(type),
+            },
+            { type: "divider" },
+            {
+              type: "customChartType",
+              options: ["bar", "line", "pie"],
+              activeOption: selectedItem?.dashboard_data.chart_type,
+              onClick: (type: string) => handleUpdateChartType(type),
             },
             { type: "divider" },
             {

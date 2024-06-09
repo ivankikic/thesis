@@ -4,10 +4,32 @@ import { authenticateToken } from "../middleware/authorization.js";
 
 const router = express.Router();
 
-// Get all sensor logs
+// Get all sensor logs with optional filters
 router.get("/", authenticateToken, async (req, res) => {
+  const { startDate, endDate, sensor_id } = req.query;
+  let query = "SELECT * FROM sensor_logs WHERE 1=1";
+  const params = [];
+
+  if (startDate) {
+    query += " AND created_at >= $1";
+    params.push(startDate);
+  }
+  if (endDate) {
+    const endDateWithTime = new Date(
+      new Date(endDate).setHours(23, 59, 59, 999)
+    );
+    query += " AND created_at <= $2";
+    params.push(endDateWithTime);
+  }
+  if (sensor_id) {
+    query += " AND sensor_id = $3";
+    params.push(sensor_id);
+  }
+
+  query += " ORDER BY created_at DESC";
+
   try {
-    const result = await pool.query("SELECT * FROM sensor_logs");
+    const result = await pool.query(query, params);
     res.status(200).json(result.rows);
   } catch (err) {
     console.error(err);

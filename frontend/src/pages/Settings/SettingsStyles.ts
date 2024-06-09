@@ -51,6 +51,7 @@ export const LanguageButton = styled.button`
 export const TableContainer = styled.div`
   overflow: hidden;
   border-radius: 10px;
+  margin-bottom: 20px;
   border: 1px solid #ddd;
 `;
 

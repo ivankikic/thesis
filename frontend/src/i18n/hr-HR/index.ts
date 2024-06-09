@@ -66,6 +66,11 @@ const hrHR = {
   TOAST_SUCCESS_EDIT_COLUMNS: "Stupci su uspješno ažurirani!",
   TOAST_SUCCESS_RENAME_ITEM: "Stupci su uspješno preimenovani!",
   TOAST_SUCCESS_UPDATE_DASHBOARD_TYPE: "Tip nadzorne ploče uspješno ažuriran!",
+  TOAST_SUCCESS_DELETE_DASHBOARD_TILE:
+    "Kartica nadzorne ploče uspješno izbrisana!",
+  TOAST_SUCCESS_UPDATE_CHART_TYPE: "Tip grafa uspješno ažuriran!",
+  TOAST_SUCCESS_TILE_ADDED: "Kartica uspješno dodana!",
+  TOAST_SUCCESS_TILE_REMOVED: "Kartica uspješno izbrisana!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -91,6 +96,8 @@ const hrHR = {
   ERROR_NAME_REQUIRED: "Naziv je obavezan",
   ERROR_SAVE_ALERT_LIMITS:
     "Došlo je do neočekivane pogreške prilikom spremanja granica upozorenja!",
+  ERROR_TILE_ADDED: "Kartica uspješno dodana!",
+  ERROR_TILE_REMOVED: "Kartica uspješno izbrisana!",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -170,6 +177,8 @@ const hrHR = {
   SEARCH_SHEET: "Pretraga tablice",
   DASHBOARD_TILE_NAME: "Naziv kartice nadzorne ploče",
   ADD_TILE: "Dodaj karticu",
+  SENSOR_LOG: "Log senzora",
+  NO_DATA: "Trenutno nema podataka za prikaz, molimo dodajte karticu",
 };
 
 export default hrHR;

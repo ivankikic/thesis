@@ -321,4 +321,42 @@ router.post("/:id/tiles", authenticateToken, async (req, res) => {
   }
 });
 
+// Update chart type for a dashboard item
+router.put("/:id/chart-type", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { itemId, chartType } = req.body;
+
+    const dashboard = await pool.query(
+      "SELECT * FROM dashboards WHERE id = $1",
+      [id]
+    );
+
+    if (dashboard.rows.length === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    const updatedData = dashboard.rows[0].data.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            dashboard_data: {
+              ...item.dashboard_data,
+              chart_type: chartType,
+            },
+          }
+        : item
+    );
+
+    const updatedDashboard = await pool.query(
+      'UPDATE "dashboards" SET data = $1 WHERE id = $2 RETURNING *',
+      [JSON.stringify(updatedData), id]
+    );
+
+    res.json(updatedDashboard.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

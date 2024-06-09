@@ -348,7 +348,7 @@ export const deleteDashboardItem = async (
       data: JSON.stringify(updatedDashboard.data),
     });
 
-    showToast("success", "Item deleted successfully");
+    showToast("success", "TOAST_SUCCESS_DELETE_DASHBOARD_TILE");
   } catch (error) {
     showToast("error", "Error deleting item");
     console.error("Error deleting dashboard item:", error);
@@ -423,5 +423,27 @@ export const updateDashboardType = async (
   } catch (error) {
     showToast("error", "Error updating dashboard type");
     console.error("Error updating dashboard type:", error);
+  }
+};
+
+export const updateChartType = async (
+  dashboardId: number,
+  itemId: number,
+  chartType: string,
+  setDashboard: (dashboard: Dashboard) => void,
+  showToast: (type: "success" | "error", message: string) => void
+) => {
+  try {
+    const response = await axiosClient.put(
+      `/api/dashboards/${dashboardId}/chart-type`,
+      {
+        itemId,
+        chartType,
+      }
+    );
+    setDashboard(response.data);
+    showToast("success", "TOAST_SUCCESS_UPDATE_CHART_TYPE");
+  } catch (error) {
+    showToast("error", "Error updating chart type");
   }
 };

@@ -19,6 +19,7 @@ export type DashboardData = {
     dashboard_type: "1:1" | "1:2" | "1:3";
     order: number;
     included_columns: string[];
+    chart_type: "bar" | "line" | "pie";
   };
 };
 
@@ -80,5 +81,12 @@ export type AlertLog = {
   limit_value: number;
   sensor_value: number;
   type: string;
+  created_at: string;
+};
+
+export type SensorLog = {
+  id: number;
+  sensor_id: number;
+  data: any;
   created_at: string;
 };

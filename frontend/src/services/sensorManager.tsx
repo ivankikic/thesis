@@ -3,6 +3,7 @@ import { Sensor } from "../utils/types";
 import { parse } from "papaparse";
 import axiosClient from "../auth/apiClient";
 import throttle from "lodash/throttle";
+import dayjs from "dayjs";
 
 const SensorManager = () => {
   const fetchNextLineFromFile = async (
@@ -36,11 +37,23 @@ const SensorManager = () => {
     });
   };
 
-  const sendSensorData = async (sheetId: number, data: any) => {
+  const sendSensorData = async (
+    sensorId: number,
+    sheetId: number,
+    data: any
+  ) => {
+    const date = dayjs().format("DD.MM.YYYY. HH:mm:ss");
+    data.row.unshift({ value: date });
+
     const response = await axiosClient.post(
       `/api/sheets/${sheetId}/insert-row`,
       data
     );
+    const sensorLog = {
+      sensor_id: sensorId,
+      data: data,
+    };
+    await axiosClient.post(`/api/sensor-logs/`, sensorLog);
     return response.data;
   };
 
@@ -66,7 +79,7 @@ const SensorManager = () => {
             const row = {
               row: result,
             };
-            await sendSensorData(sensor.sheet_id, row);
+            await sendSensorData(sensor.id, sensor.sheet_id, row);
           }
         });
       } catch (error) {

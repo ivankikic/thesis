@@ -46,6 +46,7 @@ export const DashboardContainer = styled.div<{ size: "1:1" | "1:2" | "1:3" }>`
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   user-select: none;
+  margin-bottom: 20px;
   grid-column: ${({ size }) =>
     size === "1:1" ? "span 3" : size === "1:2" ? "span 1 / span 2" : "span 1"};
 `;
@@ -61,4 +62,12 @@ export const AddDashboardButton = styled.button`
   &:hover {
     background-color: #45a049;
   }
+`;
+
+export const NoDataContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
 `;

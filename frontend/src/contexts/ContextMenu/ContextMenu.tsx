@@ -15,6 +15,12 @@ import DeleteIcon from "/icons/contextMenu/delete.svg";
 import AddDashboardIcon from "/icons/contextMenu/add_dashboard.svg";
 import AddConnectionIcon from "/icons/contextMenu/add_connection.svg";
 import EditIcon from "/icons/contextMenu/edit.svg";
+import BarChartWhiteIcon from "/icons/contextMenu/barchart_w.svg";
+import PieChartWhiteIcon from "/icons/contextMenu/piechart_w.svg";
+import LineChartWhiteIcon from "/icons/contextMenu/linechart_w.svg";
+import BarChartBlackIcon from "/icons/contextMenu/barchart_b.svg";
+import PieChartBlackIcon from "/icons/contextMenu/piechart_b.svg";
+import LineChartBlackIcon from "/icons/contextMenu/linechart_b.svg";
 
 const iconMap = {
   add_sheet: AddSheetIcon,
@@ -38,8 +44,8 @@ interface ContextMenuProps {
   actionType?: IconType;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
-  options?: string[]; // Added this line
-  activeOption?: string; // Added this line
+  options?: string[];
+  activeOption?: string;
 }
 
 const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
@@ -122,7 +128,7 @@ const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
                 )}
               </MenuDropdown>
             );
-          case "custom":
+          case "customColumnType":
             return (
               <div
                 key={index}
@@ -152,8 +158,99 @@ const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
                       cursor: "pointer",
                       borderRadius: "5px",
                     }}
+                    onMouseEnter={(e) => {
+                      if (item.activeOption !== option) {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.backgroundColor = "#f0f0f0";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (item.activeOption !== option) {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.backgroundColor = "transparent";
+                      }
+                    }}
                   >
                     {option}
+                  </button>
+                ))}
+              </div>
+            );
+          case "customChartType":
+            return (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
+              >
+                {item.options?.map((option: string) => (
+                  <button
+                    key={option}
+                    onClick={() => {
+                      if (item.onClick) {
+                        item.onClick(option);
+                      }
+                      onClose();
+                    }}
+                    style={{
+                      backgroundColor:
+                        item.activeOption === option
+                          ? "#002666"
+                          : "transparent",
+                      color: item.activeOption === option ? "white" : "black",
+                      border: "none",
+                      padding: "5px 10px",
+                      cursor: "pointer",
+                      borderRadius: "5px",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (item.activeOption !== option) {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.backgroundColor = "#f0f0f0";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (item.activeOption !== option) {
+                        (
+                          e.currentTarget as HTMLButtonElement
+                        ).style.backgroundColor = "transparent";
+                      }
+                    }}
+                  >
+                    {option === "bar" ? (
+                      <img
+                        src={
+                          item.activeOption === option
+                            ? BarChartWhiteIcon
+                            : BarChartBlackIcon
+                        }
+                        alt="Bar chart icon"
+                      />
+                    ) : option === "pie" ? (
+                      <img
+                        src={
+                          item.activeOption === option
+                            ? PieChartWhiteIcon
+                            : PieChartBlackIcon
+                        }
+                        alt="Pie chart icon"
+                      />
+                    ) : (
+                      <img
+                        src={
+                          item.activeOption === option
+                            ? LineChartWhiteIcon
+                            : LineChartBlackIcon
+                        }
+                        alt="Line chart icon"
+                      />
+                    )}
                   </button>
                 ))}
               </div>
