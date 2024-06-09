@@ -250,9 +250,9 @@ const Dashboard = () => {
       case "1:1":
         return 10;
       case "1:2":
-        return 16;
+        return 23;
       case "1:3":
-        return 30;
+        return 40;
       default:
         return 0;
     }
