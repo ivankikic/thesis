@@ -50,9 +50,9 @@ const hrHR = {
   // TOAST
   TOAST_SUCCESS_LOGIN: "Uspješno ste se prijavili!",
   TOAST_SUCCESS_LOGOUT: "Uspješno ste se odjavili!",
-  TOAST_SUCCESS_NEW_SHEET: "Nova tablica uspješno dodana!",
-  TOAST_SUCCESS_NEW_DASHBOARD: "Nova nadzorna ploča uspješno dodana!",
-  TOAST_SUCCESS_NEW_CONNECTION: "Nova veza uspješno dodana!",
+  TOAST_SUCCESS_NEW_SHEET: "Nova tablica uspješno kreirana!",
+  TOAST_SUCCESS_NEW_DASHBOARD: "Nova nadzorna ploča uspješno kreirana!",
+  TOAST_SUCCESS_NEW_CONNECTION: "Nova veza uspješno kreirana!",
   TOAST_SUCCESS_DUPLICATE_SHEET: "Tablica '{{name}}' uspješno duplicirana!",
   TOAST_SUCCESS_DUPLICATE_DASHBOARD:
     "Nadzorna ploča '{{name}}' uspješno duplicirana!",
@@ -74,10 +74,10 @@ const hrHR = {
   TOAST_SUCCESS_DELETE_DASHBOARD_TILE:
     "Kartica nadzorne ploče uspješno izbrisana!",
   TOAST_SUCCESS_UPDATE_CHART_TYPE: "Tip grafa uspješno ažuriran!",
-  TOAST_SUCCESS_TILE_ADDED: "Kartica uspješno dodana!",
+  TOAST_SUCCESS_TILE_ADDED: "Kartica uspješno kreirana!",
   TOAST_SUCCESS_TILE_REMOVED: "Kartica uspješno izbrisana!",
   TOAST_SUCCESS_DELETE_REPORT: "Izvješće uspješno izbrisano!",
-  TOAST_SUCCESS_ADD_REPORT: "Izvještaj uspješno dodan!",
+  TOAST_SUCCESS_ADD_REPORT: "Izvještaj uspješno kreiran!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",

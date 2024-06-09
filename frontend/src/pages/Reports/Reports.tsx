@@ -202,6 +202,7 @@ const Reports = () => {
                         onClick={() => handleDownload(report.file_name)}
                         style={{
                           cursor: "pointer",
+                          color: "#007bff",
                         }}
                       >
                         {report.file_name}

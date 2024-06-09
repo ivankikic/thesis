@@ -120,7 +120,8 @@ router.post("/", authenticateToken, async (req, res) => {
       }
     };
 
-    doc.fontSize(20).text(getTitle(), { align: "center" });
+    doc.fontSize(20).text(name, { align: "center" });
+    doc.fontSize(12).text(getTitle(), { align: "center" });
     doc.moveDown();
     doc.fontSize(12).text(finalSummary, { align: "left" });
 
