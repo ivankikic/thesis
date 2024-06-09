@@ -10,8 +10,8 @@ const hrHR = {
   ALERTS: "Upozorenja", // ??
   LOGIN: "Prijava",
   LOGOUT: "Odjava",
-  REPORT: "Izvješće",
-  REPORTS: "Izvješća",
+  REPORT: "Izvještaj",
+  REPORTS: "Izvještaji",
   REGISTER: "Registracija",
   PASSWORD: "Lozinka",
   PASSWORD_REQUIRED: "Lozinka je obavezna",
@@ -41,6 +41,11 @@ const hrHR = {
   CONFIRM_DELETE_DASHBOARD:
     "Jeste li sigurni da želite obrisati nadzornu ploču?",
   CONFIRM_DELETE_CONNECTION: "Jeste li sigurni da želite obrisati vezu?",
+  DAILY: "Dnevni",
+  WEEKLY: "Tjedni",
+  MONTHLY: "Mjesečni",
+  QUARTALY: "Kvartalni",
+  YEARLY: "Godišnji",
 
   // TOAST
   TOAST_SUCCESS_LOGIN: "Uspješno ste se prijavili!",
@@ -71,6 +76,8 @@ const hrHR = {
   TOAST_SUCCESS_UPDATE_CHART_TYPE: "Tip grafa uspješno ažuriran!",
   TOAST_SUCCESS_TILE_ADDED: "Kartica uspješno dodana!",
   TOAST_SUCCESS_TILE_REMOVED: "Kartica uspješno izbrisana!",
+  TOAST_SUCCESS_DELETE_REPORT: "Izvješće uspješno izbrisano!",
+  TOAST_SUCCESS_ADD_REPORT: "Izvještaj uspješno dodan!",
 
   // ERRORS
   ERROR_SHEET_ALREADY_EXISTS: "Tablica s tim imenom već postoji",
@@ -98,6 +105,10 @@ const hrHR = {
     "Došlo je do neočekivane pogreške prilikom spremanja granica upozorenja!",
   ERROR_TILE_ADDED: "Kartica uspješno dodana!",
   ERROR_TILE_REMOVED: "Kartica uspješno izbrisana!",
+  ERROR_DELETE_REPORT:
+    "Došlo je do neočekivane pogreške prilikom brisanja izvješća!",
+  ERROR_DOWNLOAD_FILE:
+    "Došlo je do neočekivane pogreške prilikom preuzimanja izvješća!",
 
   // HOME PAGE
   HOME_WELCOME: "Dobro došli",
@@ -179,6 +190,16 @@ const hrHR = {
   ADD_TILE: "Dodaj karticu",
   SENSOR_LOG: "Log senzora",
   NO_DATA: "Trenutno nema podataka za prikaz, molimo dodajte karticu",
+
+  // REPORTS
+  CREATED_REPORTS: "Kreirani izvještaji",
+  DOWNLOAD: "Preuzmi",
+  ACTIONS: "Radnje",
+  CREATE_REPORT: "Kreiraj izvješće",
+  INTERVAL_TYPE: "Tip izvještaja",
+  REPORT_NAME: "Naziv izvještaja",
+  ADD_REPORT: "Dodavanje izvještaja",
+  GENERATING_REPORT: "Generiranje izvještaja",
 };
 
 export default hrHR;

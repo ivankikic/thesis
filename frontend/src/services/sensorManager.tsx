@@ -13,7 +13,6 @@ const SensorManager = () => {
   const getThreshholds = async () => {
     const response = await axiosClient.get(`/api/alert-limits`);
 
-    console.log(response.data);
     setThreshholds(response.data);
   };
 

@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express, { json, urlencoded } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -26,7 +26,8 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = { credentials: true, origin: process.env.URL || "*" };
 
 app.use(cors(corsOptions));
-app.use(json());
+app.use(json({ limit: "50mb" }));
+app.use(urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 // routes

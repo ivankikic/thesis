@@ -168,3 +168,10 @@ export const ColumnButton = styled.div<{ selected: boolean }>`
     background-color: ${({ selected }) => (selected ? "#0056b3" : "#e0e0e0")};
   }
 `;
+
+export const ColumnsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+`;

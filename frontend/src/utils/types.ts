@@ -96,3 +96,11 @@ export type Threshhold = {
   sensor_id: number;
   data: any[];
 };
+
+export type Report = {
+  id: number;
+  name: string;
+  interval_type: string;
+  file_name: string;
+  created_at: string;
+};
