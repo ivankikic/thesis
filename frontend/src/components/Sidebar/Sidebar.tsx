@@ -122,7 +122,7 @@ const Sidebar = ({
   useEffect(() => {
     if (alertsOpen && alerts.length === 0) {
       setLoadingAlerts(true);
-      axiosClient.get("/api/alerts").then((res) => {
+      axiosClient.get("/api/alert-logs").then((res) => {
         setAlerts(res.data);
       });
       setLoadingAlerts(false);
@@ -149,7 +149,7 @@ const Sidebar = ({
     await axiosClient.get("/api/sensors").then((res) => {
       setConnections(res.data);
     });
-    await axiosClient.get("/api/alerts").then((res) => {
+    await axiosClient.get("/api/alert-logs").then((res) => {
       setAlerts(res.data);
     });
   };

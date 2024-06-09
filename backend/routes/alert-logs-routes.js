@@ -35,31 +35,26 @@ router.post("/", authenticateToken, async (req, res) => {
 router.get("/filter", authenticateToken, async (req, res) => {
   const { startDate, endDate, sensor_id } = req.query;
   try {
-    let query = `SELECT alert_logs.*, users.email as user_email 
-                   FROM alert_logs 
-                   JOIN users ON alert_logs.user_id = users.id 
-                   WHERE 1=1`;
+    let query = "SELECT * FROM alert_logs WHERE 1=1";
     const params = [];
 
     if (startDate) {
+      query += " AND created_at >= $1";
       params.push(startDate);
-      query += ` AND alert_logs.created_at >= $${params.length}`;
     }
-
     if (endDate) {
       const endDateWithTime = new Date(
         new Date(endDate).setHours(23, 59, 59, 999)
       );
+      query += " AND created_at <= $2";
       params.push(endDateWithTime);
-      query += ` AND alert_logs.created_at <= $${params.length}`;
     }
-
     if (sensor_id) {
+      query += " AND sensor_id = $3";
       params.push(sensor_id);
-      query += ` AND alert_logs.sensor_id = $${params.length}`;
     }
 
-    query += " ORDER BY alert_logs.created_at DESC";
+    query += " ORDER BY created_at DESC";
 
     const alertLogs = await pool.query(query, params);
     res.json(alertLogs.rows);

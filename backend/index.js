@@ -17,6 +17,7 @@ import sensorLogsRouter from "./routes/sensor-logs-routes.js";
 import alertLimitsRouter from "./routes/alert-limits-routes.js";
 import alertLogsRouter from "./routes/alert-logs-routes.js";
 import reportsRouter from "./routes/reports-routes.js";
+import emailNotificationsRouter from "./routes/email-notifications.js";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use("/api/sensor-logs", sensorLogsRouter);
 app.use("/api/alert-limits", alertLimitsRouter);
 app.use("/api/alert-logs", alertLogsRouter);
 app.use("/api/reports", reportsRouter);
+app.use("/api/email-notifications", emailNotificationsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

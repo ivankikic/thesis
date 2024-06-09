@@ -245,14 +245,14 @@ const Dashboard = () => {
     return 3;
   };
 
-  const getXAxisInterval = (dashboardType: string) => {
+  const getXAxisInterval = (dashboardType: string, dataLength: number) => {
     switch (dashboardType) {
       case "1:1":
-        return 10;
+        return dataLength ? Math.round(dataLength / 10) : 10;
       case "1:2":
-        return 23;
+        return dataLength ? Math.round(dataLength / 4.5) : 20;
       case "1:3":
-        return 40;
+        return dataLength ? Math.round(dataLength / 3) : 30;
       default:
         return 0;
     }
@@ -345,7 +345,8 @@ const Dashboard = () => {
                                           }
                                           tick={{ fontSize: 14 }}
                                           interval={getXAxisInterval(
-                                            item.dashboard_data.dashboard_type
+                                            item.dashboard_data.dashboard_type,
+                                            chartData.length
                                           )}
                                         />
                                         <YAxis
@@ -383,7 +384,8 @@ const Dashboard = () => {
                                           }
                                           tick={{ fontSize: 14 }}
                                           interval={getXAxisInterval(
-                                            item.dashboard_data.dashboard_type
+                                            item.dashboard_data.dashboard_type,
+                                            chartData.length
                                           )}
                                         />
                                         <YAxis

@@ -168,9 +168,21 @@ const AlertingSystem = () => {
                                       sensor.id,
                                       column,
                                       "upper",
-                                      Number(e.target.value)
+                                      e.target.value === ""
+                                        ? NaN
+                                        : Number(e.target.value)
                                     )
                                   }
+                                  onBlur={(e) => {
+                                    if (e.target.value === "") {
+                                      handleInputChange(
+                                        sensor.id,
+                                        column,
+                                        "upper",
+                                        NaN
+                                      );
+                                    }
+                                  }}
                                 />
                               </AlertInputContentSection>
                               <AlertInputContentSection>
@@ -188,9 +200,21 @@ const AlertingSystem = () => {
                                       sensor.id,
                                       column,
                                       "lower",
-                                      Number(e.target.value)
+                                      e.target.value === ""
+                                        ? NaN
+                                        : Number(e.target.value)
                                     )
                                   }
+                                  onBlur={(e) => {
+                                    if (e.target.value === "") {
+                                      handleInputChange(
+                                        sensor.id,
+                                        column,
+                                        "lower",
+                                        NaN
+                                      );
+                                    }
+                                  }}
                                 />
                               </AlertInputContentSection>
                             </AlertInputContent>

@@ -33,15 +33,11 @@ const Alert = () => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
 
-  const fetchAlertLogs = async (
-    start?: Date,
-    end?: Date,
-    sensorId?: string
-  ) => {
+  const fetchAlertLogs = async () => {
     const params = {
-      startDate: start ? dayjs(start).format("YYYY-MM-DD") : undefined,
-      endDate: end ? dayjs(end).format("YYYY-MM-DD") : undefined,
-      sensorId: sensorId,
+      startDate: startDate ? dayjs(startDate).format("YYYY-MM-DD") : undefined,
+      endDate: endDate ? dayjs(endDate).format("YYYY-MM-DD") : undefined,
+      sensor_id: id,
     };
     const res = await axiosClient.get("/api/alert-logs/filter", { params });
     setAlertLogs(res.data);
@@ -55,10 +51,10 @@ const Alert = () => {
   useEffect(() => {
     fetchAlertLogs();
     fetchSensors();
-  }, []);
+  }, [id]);
 
   const handleShowLogs = () => {
-    fetchAlertLogs(startDate || undefined, endDate || undefined, id);
+    fetchAlertLogs();
   };
 
   return (

@@ -90,3 +90,9 @@ export type SensorLog = {
   data: any;
   created_at: string;
 };
+
+export type Threshhold = {
+  id: number;
+  sensor_id: number;
+  data: any[];
+};

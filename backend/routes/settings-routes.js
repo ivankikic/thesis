@@ -27,4 +27,15 @@ router.post("/language", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/email", async (req, res) => {
+  try {
+    const email = await pool.query(
+      "SELECT * FROM settings WHERE name = 'email'"
+    );
+    res.json(email.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
