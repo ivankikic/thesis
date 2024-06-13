@@ -116,7 +116,7 @@ const enUS = {
   IMPORT_DATA_DESCRIPTION:
     "Data import can be done via a CSV file. The file must contain data in a format supported by the application. Import data into the sheet by clicking the 'Import' button on the sheet page.",
   IMPORT_DATA_BUTTON: "Import",
-  IMPORT_IT: "Import it",
+  IMPORT_IT: "Import",
   IMPORT_FILE: "Import file",
   IMPORT_PREVIEW: "Import preview",
   FILES: "Files",

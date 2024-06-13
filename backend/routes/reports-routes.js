@@ -48,7 +48,10 @@ router.post("/", authenticateToken, async (req, res) => {
           messages: [
             {
               role: "system",
-              content: `Summarize the following data for ${column} considering the interval type ${interval_type} and keep in mind that every row represents the data for one minute: ${JSON.stringify(
+              content: `Summarize the following data for ${column} considering the interval type ${interval_type} and keep in mind that every row represents the data for one minute,
+              First in few sentences said about the data, date, what are the columns. Then for every column write some statictics, like min, max, average, etc. and write some sentences about that how you see it, is it good, normal, abnormal, etc. 
+
+              Later on write some overall summary, what is the problem, what is the solution, what is the recommendation, are the things good or not, etc: ${JSON.stringify(
                 columnData[column]
               )}`,
             },

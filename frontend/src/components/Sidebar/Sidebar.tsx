@@ -238,7 +238,7 @@ const Sidebar = ({
   return (
     <>
       {!isOpen && (
-        <OpenButton onClick={() => setIsOpen(true)}>{">>"}</OpenButton>
+        <OpenButton onClick={() => setIsOpen(true)}>{">"}</OpenButton>
       )}
       <SidebarContainer
         isOpen={isOpen}
@@ -249,7 +249,7 @@ const Sidebar = ({
             <Logo onClick={() => navigate("/")}>
               <img src={FarmsenseLogo} alt="Farmsense Logo" />
             </Logo>
-            <ToggleButton onClick={() => setIsOpen(false)}>{"<<"}</ToggleButton>
+            <ToggleButton onClick={() => setIsOpen(false)}>{"<"}</ToggleButton>
           </SidebarContentHeader>
           <FixedSection>
             <SidebarItem onClick={() => navigate("/import")}>

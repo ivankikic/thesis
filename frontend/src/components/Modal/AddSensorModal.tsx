@@ -146,7 +146,7 @@ const AddSensorModal: React.FC<AddSensorModalProps> = ({
         <div>
           <label>{t("SENSOR_SOURCE")}:</label>
           <Select
-            value={sensorSources[0].id}
+            value={sensorSource}
             onChange={(e) => {
               setSensorSource(e.target.value);
             }}

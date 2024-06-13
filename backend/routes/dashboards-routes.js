@@ -64,7 +64,7 @@ router.post("/", authenticateToken, async (req, res) => {
 
     const dashboard = await pool.query(
       'INSERT INTO "dashboards" (name, data) VALUES ($1, $2) RETURNING *',
-      [dashboardName, data || []]
+      [dashboardName, []]
     );
 
     res.json(dashboard.rows[0]);
